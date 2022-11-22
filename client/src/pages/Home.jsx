@@ -8,7 +8,11 @@ const Home = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`http://localhost:3001/countries?name=${name}`)
+      const response = await axios(
+        name
+        ? `http://localhost:3001/countries?name=${name}`
+        : `http://localhost:3001/countries`
+      )
       console.log(response)
     }
     fetchData()

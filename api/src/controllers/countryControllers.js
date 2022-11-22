@@ -1,37 +1,42 @@
 const { Country, Activity } = require('../db.js')
 const axios = require('axios')
+const { Op } = require("sequelize");
 
 const getCountries = async (req, res) => {
-
   const { name } = req.query;
 
   try {
-    const response = await axios(name 
-      ? `https://restcountries.com/v3/name/${name}` 
-      : 'https://restcountries.com/v3/all'
-    )
+    const response = await axios('https://restcountries.com/v3/all')
 
     const countries = response.data.map(c => {
       return {
         id: c.cca3,
         name: c.name.common,
         imgFlag: c.flags[1],
-        continent: c.continents[0]
+        continent: c.continents[0],
+        capital: c.capital ? c.capital[0] : c.capital
       }
     })
 
-    // En el primer llamado a la API la DB está vacía, por
-    // lo cual chequeamos si la misma ya se llenó o no,
-    // y en consecuencia determinamos si creamos o no nuevos datos
-    const getCountriesDB = await Country.findAll();
-    if (!getCountriesDB.length) {
+     // En el primer llamado a la API la DB está vacía, por
+    // lo cual chequeamos si la misma tiene datos o no,
+    // y en consecuencia determinamos si debemos crear nuevos o no
+    if (await Country.count() === 0) {
       await Country.bulkCreate(countries);
     }
 
-    res.json({ countries })
+    // Caso contrario (si ya había datos en la DB), solicitamos aquellas filas
+    // que queremos (todas o sólo las que matcheen con la query)
+    const reqCountries = name 
+    ? await Country.findAll({ where: { name: { [Op.match]: name }} }) 
+    : await Country.findAll()
+
+    // Devolvemos ese resultado condicional
+    res.json({ reqCountries })
   } catch (error) {
-    const { data: { status, message } } = error.response;
-    throw new Error(`Error ${status}, ${message}`)
+    // const {  status, message } = error.response?.data;
+    // throw new Error(error)
+    res.status(404).json({ message:  error.message})
   }
 }
 
