@@ -1,5 +1,15 @@
 const { Country, Activity } = require('../db.js')
 
+const getActivities = async (req, res) => {
+  try {
+    const activities = await Activity.findAll()
+
+    res.json({ activities })
+  } catch (error) {
+    res.status(500).json({ message:  error.message})
+  }
+}
+
 const createActivity = async (req, res) => {
 
   const { name, difficulty, duration, season, countries } = req.body
@@ -9,7 +19,7 @@ const createActivity = async (req, res) => {
       name,
       difficulty,
       duration,
-      season         
+      season
     });
 
     if (countries && countries.length) {
@@ -19,13 +29,13 @@ const createActivity = async (req, res) => {
       })
     } else await Country.addActivity(newActivity);
 
-    res.json(newActivity)
+    res.json({ activity: newActivity })
   } catch (error) {
     if (!name || !difficulty || !duration || !season)
       throw new Error(`Error 400, falta la información necesaria para crear una actividad.`)
 
     if (error.message.includes('llave duplicada'))
-      throw new Error(`No se puede crear la actividad. Ya existe una con el nombre "${name}"`)
+      res.status(400).json({ message: `No se puede crear la actividad. Ya existe una con el nombre "${name}"` })
     
     else 
       throw new Error(error)
@@ -33,5 +43,6 @@ const createActivity = async (req, res) => {
 }
 
 module.exports = {
-  createActivity
+  createActivity,
+  getActivities
 };

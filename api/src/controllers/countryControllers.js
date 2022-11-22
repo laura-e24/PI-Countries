@@ -14,7 +14,7 @@ const getCountries = async (req, res) => {
         name: c.name.common,
         imgFlag: c.flags[1],
         continent: c.continents[0],
-        capital: c.capital ? c.capital[0] : c.capital
+        capital: c.capital ? c.capital[0] : c.capital      
       }
     })
 
@@ -27,16 +27,21 @@ const getCountries = async (req, res) => {
 
     // Caso contrario (si ya había datos en la DB), solicitamos aquellas filas
     // que queremos (todas o sólo las que matcheen con la query)
+    const includeActivityModel = [{
+      model: Activity,
+      attributes: ["name","difficulty","duration","season"],
+      through: {
+        attributes: { exclude: ["createdAt", "updatedAt"]},
+      }
+    }]
     const reqCountries = name 
-    ? await Country.findAll({ where: { name: { [Op.match]: name }} }) 
-    : await Country.findAll()
+    ? await Country.findAll({ where: { name: { [Op.match]: name }}, include: includeActivityModel }) 
+    : await Country.findAll({ include: includeActivityModel })
 
     // Devolvemos ese resultado condicional
-    res.json({ reqCountries })
+    res.json({ countries: reqCountries })
   } catch (error) {
-    // const {  status, message } = error.response?.data;
-    // throw new Error(error)
-    res.status(404).json({ message:  error.message})
+    res.status(500).json({ message:  error.message})
   }
 }
 
@@ -45,16 +50,15 @@ const getOneCountry = async (req, res) => {
   const { countryId } = req.params;
 
   try {
-    // const { data } = await axios(`https://restcountries.com/v3/alpha/${countryId}`)
     const data = await Country.findAll({
       where: {
         id: countryId
       },
-      include:[{
+      include: [{
         model: Activity,
         attributes: ["name","difficulty","duration","season"],
-        through:{
-          attributes: {exclude: ["createdAt", "updatedAt"]},
+        through: {
+          attributes: { exclude: ["createdAt", "updatedAt"] },
         }
       }],
     });

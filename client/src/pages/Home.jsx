@@ -1,23 +1,24 @@
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useSearchParams  } from 'react-router-dom'
-import axios from "axios"
+
+import { getCountries } from '../redux/actions';
 
 const Home = () => {
+
+  const dispatch  = useDispatch();
+  const countries = useSelector((state) => state.countries);
+
   const [searchParams] = useSearchParams();
   const name = searchParams.get('name');
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios(
-        name
-        ? `http://localhost:3001/countries?name=${name}`
-        : `http://localhost:3001/countries`
-      )
-      console.log(response)
+      await dispatch(getCountries(name))
     }
     fetchData()
-  }, [])
-
+  }, [name])
+console.log(countries)
   return (  
     <main>
       <h1>Henry Countries --- HOME --- {
