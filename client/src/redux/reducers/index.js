@@ -10,7 +10,7 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_COUNTRIES:
-      return {...state, countries: state.countries.concat(action.payload.countries)}
+      return {...state, countries: action.payload.countries}
 
     case GET_COUNTRY:
       return {...state, country: { ...state.country, ...action.payload.country }}

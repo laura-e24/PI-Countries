@@ -7,14 +7,16 @@ const getCountries = async (req, res) => {
 
   try {
     const response = await axios('https://restcountries.com/v3/all')
-
     const countries = response.data.map(c => {
       return {
         id: c.cca3,
         name: c.name.common,
         imgFlag: c.flags[1],
         continent: c.continents[0],
-        capital: c.capital ? c.capital[0] : c.capital      
+        capital: c.capital ? c.capital[0] : c.capital,
+        population: c.population,
+        area: c.area,
+        subregion: c.subregion  
       }
     })
 
