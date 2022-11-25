@@ -11,8 +11,6 @@ import usePagination from '../hooks/usePagination';
 import { getActivities, getCountries } from '../redux/actions';
 import { sortArr } from '../utils';
 
-
-
 const CardsContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);

@@ -24,7 +24,6 @@ const Select = styled.select`
   border-radius: 6px;
   margin-right: 10px;
   background-color: rgba(217, 217, 217, 0.62);
-  
 `
 
 const Option = styled.option`

@@ -95,10 +95,10 @@ const SideBar = () => {
     <>
       <style>
         {`
-          label {
+          #label {
             font-size: 17px;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 10px !important;
             width: 100%;
             display: block;
           }
@@ -106,7 +106,7 @@ const SideBar = () => {
       </style>
       <SideBarComponent>
         <form onSubmit={handleSubmit}>
-          <label>Explorá tu próximo destino ✈️</label>
+          <label id='label'>Explorá tu próximo destino ✈️</label>
           <div style={{ display: 'flex' }}>
             <Input value={search} placeholder='Buscar país' onChange={e => setSearch(e.target.value)} />
             <SearchButton type='submit'>Buscar</SearchButton>
@@ -117,7 +117,7 @@ const SideBar = () => {
             <MenuItem active={location.pathname.includes('home')}>🏠 Home</MenuItem>
           </Link>
           <Link to='/activities/create' style={{ textDecoration: 'none' }}>
-            <MenuItem>📝 Crear actividad</MenuItem>
+            <MenuItem active={location.pathname.includes('activities')}>📝 Crear actividad</MenuItem>
           </Link>
         </Menu>
       </SideBarComponent>
