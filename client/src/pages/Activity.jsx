@@ -5,7 +5,7 @@ import { ButtonComponent } from '../components/GenericButton';
 import CustomInput from '../components/CustomInput';
 import SideBar from '../components/SideBar';
 
-import { createActivity, getActivities, getCountries } from "../redux/actions";
+import { createActivity, getCountries } from "../redux/actions";
 import CustomSelect from '../components/CustomSelect';
 
 const MainContainer = styled.main`
@@ -23,6 +23,16 @@ const Card = styled.div`
 
 const Button = styled(ButtonComponent)`
   margin-top: 20px;
+  ${({ disabled }) => disabled && `
+  background-color: rgb(148, 146, 146, 0.5);
+  color: black;
+  box-shadow: none;
+  cursor: default;
+  opacity: 75%
+  &:hover {
+    background-color: none;
+  }
+  `}
 `
 const RemoveButton = styled.div`
   display: inline;
@@ -36,16 +46,31 @@ const RemoveButton = styled.div`
   }
 `
 
+const ErrorMessage = styled.span`
+  color: rgba(211, 16, 39);
+  font-weight: 300;
+`
+
 const Activity = () => {
 
   const dispatch  = useDispatch();
   const countries = useSelector((state) => state.countries);
 
+
+  const [errors, setErrors] = useState({
+    name: "",
+    difficulty: "",
+    duration: "",
+    season: "",
+    countries: ""
+  })
+
   const [values, setValues] = useState({
     name: "",
     difficulty: "",
     duration: "",
-    season: ""
+    season: "",
+    countries: []
   })
 
   const handleChange = e => {
@@ -53,6 +78,31 @@ const Activity = () => {
       ...values,
       [e.target.name]: e.target.value
     })
+
+    if (errors[e.target.name]) {
+      setErrors({
+        ...errors,
+        [e.target.name]: ''
+      })
+    }
+  }
+
+  const handleError = e => {
+
+    const errorsMsg = {
+      name: 'Nombre requerido.',
+      difficulty: 'Dificultad requerida.',
+      duration: 'Duración requerida.',
+      season: 'Temporada requerida.',
+      countries: 'País(es) requerido(s).'
+    }
+
+    if (!values[e.target.name] || (!values[e.target.name].length)) {
+      setErrors({
+        ...errors,
+        [e.target.name]: errorsMsg[e.target.name]
+      })
+    }
   }
 
   const handleSubmit = async e => {
@@ -105,54 +155,91 @@ const Activity = () => {
           <Card>
             <form onSubmit={handleSubmit}>
               <div id='grid'>
-                <CustomInput 
-                  label='Nombre'
-                  name='name' 
-                  value={values.name} 
-                  onChange={handleChange}  
-                />
-                <CustomInput 
-                  label='Dificultad'
-                  type='number' 
-                  name='difficulty' 
-                  value={values.difficulty} 
-                  onChange={handleChange}  
-                />
-                <CustomInput 
-                  label='Duración'
-                  name='duration' 
-                  value={values.duration} 
-                  onChange={handleChange}  
-                />
-                <CustomInput 
-                  label='Temporada'
-                  name='season' 
-                  value={values.season} 
-                  onChange={handleChange}  
-                />
+                <span>
+                  <CustomInput 
+                    errors={errors}
+                    label='Nombre'
+                    name='name'
+                    placeholder='Nombre...'
+                    value={values.name} 
+                    onChange={handleChange}
+                    onBlur={handleError}
+                  />
+                  <ErrorMessage>{errors.name}</ErrorMessage>
+                </span>
+                <span>
+                  <CustomInput 
+                    errors={errors}
+                    label='Dificultad'
+                    type='number' 
+                    name='difficulty' 
+                    placeholder='Dificultad...'
+                    value={values.difficulty} 
+                    onChange={handleChange}  
+                    onBlur={handleError}
+                  />
+                  <ErrorMessage>{errors.difficulty}</ErrorMessage>
+                </span>
+                <span>
+                  <CustomInput 
+                    errors={errors}
+                    label='Duración'
+                    name='duration' 
+                    placeholder='Duración...'
+                    value={values.duration} 
+                    onChange={handleChange}  
+                    onBlur={handleError}
+                  />
+                  <ErrorMessage>{errors.duration}</ErrorMessage>
+                </span>
+                <span>
+                  <CustomInput 
+                    errors={errors}
+                    label='Temporada'
+                    name='season' 
+                    placeholder='Temporada...'
+                    value={values.season} 
+                    onChange={handleChange}  
+                    onBlur={handleError}
+                  />
+                  <ErrorMessage>{errors.season}</ErrorMessage>
+                </span>
               </div>
-              <div style={{ display: 'flex'}}>
-                <CustomSelect 
-                  label='Países' 
-                  name='countries' 
-                  onChange={e => setValues({
-                    ...values,
-                    countries: values.countries.concat(countries.find(c => c.id === e.target.value))
-                  })}
-                >
-                  <option value="">...</option>
-                  {countries.map((country) => (
-                    <option key={country.id} value={country.id}>{country.name}</option>
-                  ))}
-                </CustomSelect>
+              <div style={{ display: 'flex' }}>
+                <span>
+                  <CustomSelect 
+                    errors={errors}
+                    label='Países' 
+                    name='countries' 
+                    onBlur={handleError}
+                    onChange={e => {
+                      setValues({
+                        ...values,
+                        countries: values.countries?.concat(countries.find(c => c.id === e.target.value))
+                      })
+                      if (errors.countries.length) {
+                        setErrors({
+                          ...errors,
+                          countries: ''
+                        })
+                      }
+                    }}
+                  >
+                    <option value="">...</option>
+                    {countries.map((country) => (
+                      <option key={country.id} value={country.id}>{country.name}</option>
+                    ))}
+                  </CustomSelect>
+                  <ErrorMessage>{errors.countries}</ErrorMessage>
+                </span>
                 <div style={{ display:'flex',  flexWrap: 'wrap',  marginTop: 15, marginLeft: 10  }}>
                   {values.countries && values.countries.map((c, i) => (
                     <div style={{ display: 'flex' }} key={i}>
                       <p style={{  fontWeight: 700, color: '#818181', paddingBottom: 0  }}>{c.name}</p>
                       <RemoveButton onClick={() => removeCountryOption(c.id)}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 50 50" overflow="visible" stroke="black" stroke-width="10" stroke-linecap="round">
-                          <line x2="50" y2="50" stroke-width="5"/>
-                          <line x1="50" y2="50" stroke-width="5"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 50 50" overflow="visible" stroke="black" strokeWidth="10" strokeLinecap="round">
+                          <line x2="50" y2="50" strokeWidth="5"/>
+                          <line x1="50" y2="50" strokeWidth="5"/>
                         </svg>
                       </RemoveButton>
                     </div>
@@ -160,7 +247,9 @@ const Activity = () => {
                 </div>
               </div>
               <div id='button'>
-                <Button>Crear ✏️</Button>
+                <Button disabled={Object.values(values).some(e => !e || !e.length)}>
+                  Crear ✏️
+                </Button>
               </div>
             </form>
           </Card>

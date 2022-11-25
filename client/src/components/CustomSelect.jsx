@@ -6,9 +6,14 @@ const Select = styled.select`
   border-radius: 6px;
   margin-right: 10px;
   background-color: rgba(217, 217, 217, 0.62);
+  ${({ error }) => error && `
+    background: rgba(211, 16, 39, 0.62);
+    border: solid 1px rgb(211, 16, 39)
+  `}
 `
 
-const CustomSelect = ({ children, onChange, name, value, label }) => {
+const CustomSelect = ({ children, onChange, name, label, errors, onBlur }) => {
+
   return (  
     <>
       <style>
@@ -24,7 +29,12 @@ const CustomSelect = ({ children, onChange, name, value, label }) => {
       </style>
       <div style={{ marginBottom: 10, display: 'block'}}>
         <label id="label">{label}</label>
-        <Select value={value} name={name} onChange={onChange}>
+        <Select 
+          error={errors[name]}
+          name={name} 
+          onBlur={onBlur}
+          onChange={onChange}
+        >
           {children}
         </Select>
       </div>

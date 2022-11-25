@@ -13,10 +13,12 @@ cursor: pointer;
 font-size:  17px;
 font-weight: 400;
 color: rgba(237, 236, 236, 1);
-&:hover {
-  background: #D1CDF3;
-  color: black;
-}
+${({ disabled }) => !disabled && `
+  &:hover {
+    background: #D1CDF3;
+    color: black;
+  }
+`}
 margin-top: 20px;
 `
 
