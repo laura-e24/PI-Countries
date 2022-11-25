@@ -1,15 +1,17 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { getCountries } from '../redux/actions'
 
 const SideBarComponent = styled.aside`
-  max-width: 20%;
+  /* max-width: 20%; */
   padding: 20px 25px;
   background-color: rgba(237, 236, 236, 1);
   height: calc(100vh - 70px);
   border-radius: 10px;
   margin: auto 20px;
+  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
 `
 
 const Menu = styled.div`
@@ -21,10 +23,26 @@ const Menu = styled.div`
 `
 
 const MenuItem = styled.span`
+  -webkit-transition: background 1s; /* For Safari 3.0 to 6.0 */
+  transition: background 1s; /* For modern browsers */
+  background: transparent;
   padding: 10px;
   display: block;
   border: solid 1px #8278D7;
   border-radius: 10px;
+  color: #8278D7;
+  ${({ active }) => !active && `
+    &:hover {
+      background: rgba(130, 120, 215, 0.62);
+      color: white;
+    }
+  `}
+
+  ${({ active }) => active && `
+    background: #8278D7;
+    color: white;
+    font-weight: 600;
+  `}
 `
 const Button = styled.button`
   background: none;
@@ -59,21 +77,23 @@ const Input = styled.input`
   margin-right: 10px;
   background-color: rgba(217, 217, 217, 0.62);
 `
-const SideBar = ({ page }) => {
+const SideBar = () => {
 
   const dispatch  = useDispatch();
+  const location = useLocation()
   const [search, setSearch] = useState('')
-
+  let navigate = useNavigate();
   const handleSubmit = async e => {
     e.preventDefault();
 
     const response = await  dispatch(getCountries(search))
     console.log(response)
+    navigate(`/home?name=${search}`);
   }
 
   return (  
     <>
-      <style jsx>
+      <style>
         {`
           label {
             font-size: 17px;
@@ -93,8 +113,12 @@ const SideBar = ({ page }) => {
           </div>
         </form>
         <Menu>
-          <MenuItem>Home</MenuItem>
-          <MenuItem>Crear actividad</MenuItem>
+          <Link to='/home' style={{ textDecoration: 'none' }}>
+            <MenuItem active={location.pathname.includes('home')}>🏠 Home</MenuItem>
+          </Link>
+          <Link to='/activities/create' style={{ textDecoration: 'none' }}>
+            <MenuItem>📝 Crear actividad</MenuItem>
+          </Link>
         </Menu>
       </SideBarComponent>
     </>

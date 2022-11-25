@@ -4,20 +4,14 @@ import { Outlet, useSearchParams  } from 'react-router-dom'
 import styled from 'styled-components'
 import CountryCard from '../components/CountryCard';
 import FilterAndSortBar from '../components/FilterAndSortBar';
+import Pagination from '../components/Pagination';
 import SideBar from '../components/SideBar';
 import usePagination from '../hooks/usePagination';
 
 import { getActivities, getCountries } from '../redux/actions';
 import { sortArr } from '../utils';
 
-const Pagination = styled.nav`
-  display: flex;
-  width: 100%;
-  justify-content: space-around;
-  padding: 20px;
-  background-color: blue;
-  font-size: 20px;
-`
+
 
 const CardsContainer = styled.div`
   display: grid;
@@ -64,14 +58,17 @@ const Home = () => {
 
     else return country
   }
+
+
   const sortedArr = sortArr(countries.filter(filterArr), sorting.order, sorting.by)
 
   const [searchParams] = useSearchParams();
   const name = searchParams.get('name');
-  const { next, prev, jump, currentData, currentPage, pages } = usePagination(sortedArr)
   const continents = [...new Set(countries.map(c => c.continent))];
-  const activitiesNames = activities.map(c => c.name);
+  const activitiesNames = [...new Set(activities.map(c => c.name))];
 
+
+  const { next, prev, jump, currentData, currentPage, pages } = usePagination(sortedArr)
   const sliceCountries = currentData()
 
   const filteringData = {
@@ -105,18 +102,15 @@ const Home = () => {
             )
           })}
         </CardsContainer>
-        {/* <Pagination>
-          <button onClick={() => prev()}>{"<"}</button>
-          {new Array(pages).fill(0).map((_, index) => {
-            return (
-              <p key={index} onClick={() => jump(index+1)} style={index + 1 === currentPage ? {color: 'red', backgroundColor: 'purple', padding: '2rem'} : {}}>
-                {index + 1}
-              </p>
-            )
-          })}
-          <button onClick={() => next()}>{">"}</button>
-        </Pagination> */}
       </div>
+        {/* <Pagination 
+          next={next}
+          prev={prev}
+          jump={jump}
+          currentData={currentData}
+          currentPage={currentPage}
+          pages={pages}
+        /> */}
       <Outlet />
     </MainContainer>
   );
