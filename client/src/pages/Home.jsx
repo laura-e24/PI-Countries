@@ -24,7 +24,6 @@ const MainContainer = styled.main`
   margin-top: 15px;
   width: 100%;
   height: 100vh;
-  display: flex;
 `
 
 const Home = () => {
@@ -84,31 +83,35 @@ const Home = () => {
 
   return (  
     <MainContainer>
-        <SideBar />
-      <div>
-        <FilterAndSortBar 
-          sorting={sorting}
-          filtering={filtering}
-          setSorting={setSorting}
-          setFiltering={setFiltering}
-          filteringData={filteringData}
-        />
-        <CardsContainer>
-          {sliceCountries.map((country, i) => {
-            return (
-              <CountryCard country={country} key={i} />
-            )
-          })}
-        </CardsContainer>
+      <div style={{ width: '100%', display:'flex' }}>
+        <div>
+          <SideBar />
+        </div>
+        <div className='w-full'>
+          <FilterAndSortBar 
+            sorting={sorting}
+            filtering={filtering}
+            setSorting={setSorting}
+            setFiltering={setFiltering}
+            filteringData={filteringData}
+          />
+          <CardsContainer>
+            {sliceCountries.map((country, i) => {
+              return (
+                <CountryCard country={country} key={i} />
+              )
+            })}
+          </CardsContainer>
+        </div>
       </div>
-        {/* <Pagination 
-          next={next}
-          prev={prev}
-          jump={jump}
-          currentData={currentData}
-          currentPage={currentPage}
-          pages={pages}
-        /> */}
+      <Pagination 
+        next={next}
+        prev={prev}
+        jump={jump}
+        currentData={currentData}
+        currentPage={currentPage}
+        pages={pages}
+      />
       <Outlet />
     </MainContainer>
   );

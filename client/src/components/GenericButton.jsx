@@ -19,7 +19,6 @@ ${({ disabled }) => !disabled && `
     color: black;
   }
 `}
-margin-top: 20px;
 `
 
 const GenericButton = ({ children }) => {

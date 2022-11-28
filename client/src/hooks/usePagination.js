@@ -3,7 +3,7 @@ import { useState } from 'react';
 function usePagination(data) {
   const [currentPage, setCurrentPage] = useState(1);
 
-  const PAGE_LIMIT = 10;
+  const PAGE_LIMIT = currentPage === 1 ? 9 : 10;
 
   const pages = Math.ceil(data.length / PAGE_LIMIT)
 

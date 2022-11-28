@@ -25,7 +25,7 @@ const CountryCard = ({ country }) => {
             text-align: center;
             line-height: 1.1rem;
           }
-          p {
+          #p {
             text-align: center;
             font-size: 20px;
             font-weight: 600;
@@ -44,13 +44,15 @@ const CountryCard = ({ country }) => {
           <img alt={`${country.name}-flag`} src={country.imgFlag} />
           <span>
             <h3>{country.name}</h3>
-            <p>{country.continent}</p>
+            <p id='p'>{country.continent}</p>
           </span>
-          <Link to={`/countries/${country.id}`} style={{ textDecoration: 'none' }}>
+         <span style={{ display: 'flex', width: '100%', justifyContent:'center' }}>
+         <Link to={`/countries/${country.id}`} style={{ textDecoration: 'none' }}>
             <GenericButton type='button'>
               Ver detalles 🔎
             </GenericButton>
           </Link>
+         </span>
         </div>
       </Card>
     </>
