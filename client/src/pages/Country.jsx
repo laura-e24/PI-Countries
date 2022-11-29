@@ -97,7 +97,7 @@ const Country = () => {
             <h2>{country.name} &nbsp;<span id='spanId'>({countryId})</span></h2>
             <CardsContainer>
               <Card>
-                <img className='my-auto' src={country.imgFlag} alt={`${country.name}-flag`} height={115} style={{ padding: 15, marginLeft: 10 }} />
+                <img src={country.imgFlag} alt={`${country.name}-flag`} height={115} style={{ padding: 15, marginLeft: 10 }} />
                 <table style={{ tableLayout: 'auto', marginLeft: 50 }}>
                   <tbody>
                     <tr>

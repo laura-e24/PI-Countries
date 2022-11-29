@@ -10,7 +10,7 @@ const Card = styled.nav`
   border-radius: 10px;
   filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
   font-size: 17px;
-  margin: 20px;
+  margin-top: 20px;
 `
 
 const Button = styled.button`
@@ -45,7 +45,7 @@ const PageNumber = styled.span`
   `}
 `
 
-const Pagination = ({next, prev, jump, currentData, currentPage, pages }) => {
+const Pagination = ({next, prev, jump, currentPage, pages }) => {
 
   return (  
     <div>

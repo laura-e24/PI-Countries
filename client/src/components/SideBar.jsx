@@ -10,7 +10,7 @@ const SideBarComponent = styled.aside`
   background-color: rgba(237, 236, 236, 1);
   height: calc(100vh - 70px);
   border-radius: 10px;
-  margin: auto 20px;
+  margin-right: 20px;
   filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
 `
 

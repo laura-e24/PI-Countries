@@ -32,14 +32,13 @@ const Index = () => {
     <>
       <style>
         {`
-        strong {
-          position: relative;
-          font-family: 'DM Sans', sans-serif;
-        }
+          strong {
+            position: relative;
+            font-family: 'DM Sans', sans-serif;
+          }
 
         strong::before {
           background-color: #8278D7;
-
           content: "";
           position: absolute;
           width: calc(100% + 4px);
@@ -47,12 +46,11 @@ const Index = () => {
           left: -2px;
           bottom: -5px;
           z-index: -1;
-          {/* transform: rotate(-2deg); */}
         }
         `}
       </style>
       <Main>
-      <div style={{ margin: 'auto' }}>
+      <div className='m-auto'>
         <Header>
           ¡Bienvenido a &nbsp;
           <strong>Henry Countries</strong>
@@ -62,7 +60,7 @@ const Index = () => {
           En este sitio podrás explorar los países del mundo en busca de tu
           próximo destino ✈️
         </Text>
-        <span style={{ display: 'flex', width: '100%', justifyContent:'center', marginTop: 20 }}>
+        <span className='w-full flex justify-center' style={{ marginTop: 20 }}>
           <Link to='/home' style={{ textDecoration: 'none' }}>
             <GenericButton type='button'>
               Ingresar

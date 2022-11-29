@@ -21,6 +21,10 @@ label {
   margin-bottom: 0 !important;
 }
 
+.m-auto {
+  margin: auto;
+}
+
 .my-auto {
   margin-top: auto;
   margin-bottom: auto;
@@ -33,6 +37,14 @@ label {
 
 .w-full {
   width: 100%;
+}
+
+.flex {
+  display: flex;
+}
+
+.justify-center {
+  justify-content: center;
 }
 
 .animation-pulse {
