@@ -1,10 +1,11 @@
-import { GET_COUNTRIES, GET_COUNTRY, GET_ACTIVITIES, CREATE_ACTIVITY } from "../types";
+import { GET_COUNTRIES, GET_COUNTRY, GET_ACTIVITIES, CREATE_ACTIVITY, CLEAN_UP } from "../types";
 
 
 const initialState = {
   countries: [],
   country: {},
   activities: [],
+  status: 'idle'
 };
 
 export default (state = initialState, action) => {
@@ -19,7 +20,10 @@ export default (state = initialState, action) => {
       return {...state, activities: state.activities.concat(action.payload.activities)}
 
     case CREATE_ACTIVITY:
-        return {...state, activities: state.activities.concat(action.payload.activity)}
+      return {...state, activities: state.activities.concat(action.payload.activity)}
+
+    case CLEAN_UP:
+      return {...state, country: {}}
         
     default:
       return state;

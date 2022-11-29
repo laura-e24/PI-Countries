@@ -6,10 +6,12 @@ import CountryCard from '../components/CountryCard';
 import FilterAndSortBar from '../components/FilterAndSortBar';
 import Pagination from '../components/Pagination';
 import SideBar from '../components/SideBar';
+import NoResults from '../components/NoResults';
 import usePagination from '../hooks/usePagination';
 
 import { getActivities, getCountries } from '../redux/actions';
 import { sortArr } from '../utils';
+import HomeSkeleton from '../components/HomeSkeleton';
 
 const CardsContainer = styled.div`
   display: grid;
@@ -31,6 +33,7 @@ const Home = () => {
   const dispatch  = useDispatch();
   const countries = useSelector((state) => state.countries);
   const activities = useSelector((state) => state.activities);
+  const [isLoading, setIsLoading] = useState(false)
 
   const [sorting, setSorting] = useState({
     active: false,
@@ -45,14 +48,20 @@ const Home = () => {
   })
 
   const filterArr = country => {
-    const names = country.Activities.map(a => a.name);
+    const activitiesNames = country.Activities.map(a => a.name);
 
-    if (filtering.by.length === 1) 
-      return filtering.values.some(v => names.indexOf(v) >= 0) || filtering.values.includes(country.continent)
+    // Si filtramos por sólo una opción, retornamos aquellos países
+    // que contengan o el continente o la actividad filtrada
+    if (!!filtering.values.length) 
+      return filtering.values.some(v => activitiesNames.indexOf(v) >= 0) || filtering.values.includes(country.continent)
 
-    else if (filtering.by.length > 1) 
-      return filtering.values.some(v => names.indexOf(v) >= 0) && filtering.values.includes(country.continent)
+    //  En cambio, si filtramos tanto por continente como por actividad a la vez,
+    // retorno aquellos países que contengan AMBAS características simultáneamente
+    // else if (filtering.by.includes('activity') && filtering.by.includes('continent') && !!filtering.values.length) 
+    //   return filtering.values.some(v => activitiesNames.indexOf(v) >= 0) && filtering.values.includes(country.continent)
 
+    // Para evitar que el array se vacíe y no se renderice nada al no aplicar filtros,
+    // debemos retornar el array sin modificar
     else return country
   }
 
@@ -75,12 +84,14 @@ const Home = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!name) setIsLoading(true)
       await dispatch(getCountries(name))
       await dispatch(getActivities())
+      if (!name) setIsLoading(false)
     }
     fetchData()
   }, [name])
-
+  
   return (  
     <MainContainer>
       <div style={{ width: '100%', display:'flex' }}>
@@ -95,23 +106,29 @@ const Home = () => {
             setFiltering={setFiltering}
             filteringData={filteringData}
           />
-          <CardsContainer>
-            {sliceCountries.map((country, i) => {
-              return (
-                <CountryCard country={country} key={i} />
-              )
-            })}
-          </CardsContainer>
+          {!isLoading ? (
+            !!sliceCountries.length ? 
+            <CardsContainer>
+              {sliceCountries.map((country, i) => {
+                return (
+                  <CountryCard country={country} key={i} />
+                )
+              })}
+            </CardsContainer>
+            : <NoResults text={name && `No se encontraron resultados para "${name}"`} />
+          ) : <HomeSkeleton />}
         </div>
       </div>
-      <Pagination 
-        next={next}
-        prev={prev}
-        jump={jump}
-        currentData={currentData}
-        currentPage={currentPage}
-        pages={pages}
-      />
+      {!!sliceCountries.length && (
+        <Pagination 
+          next={next}
+          prev={prev}
+          jump={jump}
+          currentData={currentData}
+          currentPage={currentPage}
+          pages={pages}
+        />
+      )}
       <Outlet />
     </MainContainer>
   );

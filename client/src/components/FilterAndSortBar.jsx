@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
 const Container = styled.div`
-  padding: 20px;
-  display: flex;
+  padding: 20px 0;
+  /* display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-between; */
 `
 const Button = styled.button`
   background: none;
@@ -35,11 +35,50 @@ const Option = styled.option`
 `
 
 const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filteringData }) => {
+
+  const removeFilter = filter => {
+    setFiltering(
+      filtering.values.length === 1 
+      ? { active: false, by: [], values: [] }
+      : { ...filtering, values: filtering.values.filter(f => f !== filter) }
+    )
+  }
   return (  
     <>
+      <style>
+        {`
+          #span {
+            font-weight: 600;
+            color: rgb(107 114 128);
+            margin-left: 8px;
+          }
+          .filter {
+            margin-right: 10px;
+            font-size: 14px
+          }
+          .remove-btn {
+            font-weight: 600;
+            color: rgba(211, 16, 39, 0.62);
+            cursor: pointer;
+            margin-left: 8px;
+            
+          }
+          .remove-btn:hover {
+            text-decoration: underline
+          }
+        `}
+      </style>
       <Container>
         <div>
-          <Button onClick={() => setSorting({ ...sorting, active: !sorting.active })}>
+          <Button 
+            onClick={() => {
+              setSorting(
+                sorting.active 
+                ? { active: false, by: '', order: '' }
+                : { ...sorting, active: true }
+              )
+            }}
+          >
             Ordenar
           </Button>
           {sorting.active && (
@@ -62,7 +101,18 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
               <option value="desc">Descendente</option>
             </Select>
           )}
-          <Button style={{marginLeft: 10}} onClick={() => setFiltering({ ...filtering, active: !filtering.active })}>Filtrar</Button>
+          <Button 
+            style={{ marginLeft: 10 }} 
+            onClick={() => {
+              setFiltering(
+                filtering.active 
+                ? { active: false, by: [], values: [] }
+                : { ...filtering, active: true }
+              )
+            }}
+          >
+            Filtrar
+          </Button>
           {filtering.active && (
             <Select 
               onChange={(e) => setFiltering({ ...filtering, by: filtering.by.concat(e.target.value) })} 
@@ -86,6 +136,20 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
             </Select>
           ))}
         </div>
+        {!!filtering.values.length && (
+          <div style={{ marginTop: 8 }}>
+            <span id='span'>Filtros aplicados:</span> {!!filtering.values.length && (
+              [...new Set(filtering.values)].map((filter, index) => (
+                <span className="filter" key={index}>
+                {filter}
+                <span className="remove-btn" onClick={() => removeFilter(filter)}>
+                  X
+                </span>
+                </span>
+              ))
+            )}
+          </div>
+        )}
       </Container>
     </>
   );

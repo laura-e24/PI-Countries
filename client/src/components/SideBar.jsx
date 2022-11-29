@@ -44,7 +44,7 @@ const MenuItem = styled.span`
     font-weight: 600;
   `}
 `
-const Button = styled.button`
+const Button = styled.input`
   background: none;
 	border: none;
 	outline: inherit;
@@ -88,7 +88,11 @@ const SideBar = () => {
 
     const response = await  dispatch(getCountries(search))
     console.log(response)
-    navigate(`/home?name=${search}`);
+    navigate(
+      search 
+      ? `/home?name=${search}`
+      : '/home'
+    );
   }
 
   return (  
@@ -109,7 +113,7 @@ const SideBar = () => {
           <label id='label'>Explorá tu próximo destino ✈️</label>
           <div style={{ display: 'flex' }}>
             <Input value={search} placeholder='Buscar país' onChange={e => setSearch(e.target.value)} />
-            <SearchButton type='submit'>Buscar</SearchButton>
+            <SearchButton type='submit' value='Buscar' />
           </div>
         </form>
         <Menu>

@@ -1,9 +1,11 @@
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from "react-redux";
-import { getOneCountry } from '../redux/actions';
-import { useEffect } from 'react';
+import { cleanUpState, getOneCountry } from '../redux/actions';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import SideBar from '../components/SideBar';
+import NoResults from '../components/NoResults';
+import CountrySkeleton from '../components/CountrySkeleton';
 
 const MainContainer = styled.main`
   width: 100%;
@@ -32,11 +34,16 @@ const Country = () => {
   const params = useParams();
   const { countryId } = params;
   
+  const [isLoading, setIsLoading] = useState(false)
+
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true)
       await dispatch(getOneCountry(countryId))
+      setIsLoading(false)
     }
     fetchData()
+    return () => dispatch(cleanUpState())
   }, [countryId])
 
   return (  
@@ -85,62 +92,66 @@ const Country = () => {
           <SideBar />
         </div>
         <div style={{ width: '100%', marginTop: 20, marginBottom: 20 }}>
-          <h2>{country.name} &nbsp;<span id='spanId'>({countryId})</span></h2>
-          <CardsContainer>
-            <Card>
-              <img src={country.imgFlag} alt={`${country.name}-flag`} height={115} style={{ padding: 15, marginLeft: 10 }} />
-              <table style={{ tableLayout: 'auto', marginLeft: 50 }}>
-                <tbody>
-                  <tr>
-                    <td className='att'>Continente</td>
-                    <td className='data'>{country.continent}</td>
-                  </tr>
-                  <tr>
-                    <td className='att'>Capital</td>
-                    <td className='data'>{country.capital || 'Ninguno'}</td>
-                  </tr>
-                  <tr>
-                    <td className='att'>Subregión</td>
-                    <td className='data'>{country.subregion || 'Ninguno'}</td>
-                  </tr>
-                  <tr>
-                    <td className='att'>Área</td>
-                    <td className='data'>{country.area}</td>
-                  </tr>
-                  <tr>
-                    <td className='att'>Población</td>
-                    <td className='data'>{country.population}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </Card>
-          </CardsContainer>
-          <h4>Actividades turísticas</h4>
-          <CardsContainer>
-            {country.activities?.length 
-            ? country.activities.map((act, index) => (
-              <Card key={index}>
-                <h3 style={{ marginLeft: 20 }}>{act.name}</h3>
+          {!isLoading ? (
+            <>
+            <h2>{country.name} &nbsp;<span id='spanId'>({countryId})</span></h2>
+            <CardsContainer>
+              <Card>
+                <img src={country.imgFlag} alt={`${country.name}-flag`} height={115} style={{ padding: 15, marginLeft: 10 }} />
                 <table style={{ tableLayout: 'auto', marginLeft: 50 }}>
                   <tbody>
                     <tr>
-                      <td className='att'>Temporada</td>
-                      <td className='data'>{act.season}</td>
+                      <td className='att'>Continente</td>
+                      <td className='data'>{country.continent}</td>
                     </tr>
                     <tr>
-                      <td className='att'>Duración</td>
-                      <td className='data'>{act.duration}</td>
+                      <td className='att'>Capital</td>
+                      <td className='data'>{country.capital || 'Ninguno'}</td>
                     </tr>
                     <tr>
-                      <td className='att'>Dificultad</td>
-                      <td className='data'>{act.difficulty}</td>
+                      <td className='att'>Subregión</td>
+                      <td className='data'>{country.subregion || 'Ninguno'}</td>
+                    </tr>
+                    <tr>
+                      <td className='att'>Área</td>
+                      <td className='data'>{country.area}</td>
+                    </tr>
+                    <tr>
+                      <td className='att'>Población</td>
+                      <td className='data'>{country.population}</td>
                     </tr>
                   </tbody>
                 </table>
               </Card>
-            ))
-            : <p>no hay nada</p>}
-          </CardsContainer>
+            </CardsContainer>
+            <h4>Actividades turísticas</h4>
+            <CardsContainer>
+              {country.activities?.length 
+              ? country.activities.map((act, index) => (
+                <Card key={index}>
+                  <h3 style={{ marginLeft: 20 }}>{act.name}</h3>
+                  <table style={{ tableLayout: 'auto', marginLeft: 50 }}>
+                    <tbody>
+                      <tr>
+                        <td className='att'>Temporada</td>
+                        <td className='data'>{act.season}</td>
+                      </tr>
+                      <tr>
+                        <td className='att'>Duración</td>
+                        <td className='data'>{act.duration}</td>
+                      </tr>
+                      <tr>
+                        <td className='att'>Dificultad</td>
+                        <td className='data'>{act.difficulty}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </Card>
+              ))
+              : <NoResults text='Este país no tiene actividades turísticas.' />}
+            </CardsContainer>
+            </>
+          ) : <CountrySkeleton />}
         </div>
       </MainContainer>
     </>
