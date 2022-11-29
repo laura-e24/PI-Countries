@@ -23,7 +23,6 @@ const Country = (sequelize) => {
     },
     capital: {
       type: DataTypes.STRING,
-      allowNull: true
     },
     subregion: {
       type: DataTypes.STRING,

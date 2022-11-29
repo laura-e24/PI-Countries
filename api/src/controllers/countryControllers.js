@@ -42,8 +42,9 @@ const getCountries = async (req, res) => {
 
     // Devolvemos ese resultado condicional
     res.json({ countries: reqCountries })
+    // else res.status(404).json({ message: `No se encontraron resultados para "${name}"` })
   } catch (error) {
-    res.status(500).json({ message:  error.message})
+    res.status(500).json({ message:  error.message })
   }
 }
 
@@ -78,8 +79,7 @@ const getOneCountry = async (req, res) => {
     }
     res.json({ country })
   } catch (error) {
-    // const { data: { status, message } } = error.response;
-    throw new Error(error)
+    res.status(500).json({ mesage: error.message })
   }
 }
 

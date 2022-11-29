@@ -54,7 +54,6 @@ const Index = () => {
       <Main>
       <div style={{ margin: 'auto' }}>
         <Header>
-      
           ¡Bienvenido a &nbsp;
           <strong>Henry Countries</strong>
           !

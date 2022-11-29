@@ -1,11 +1,11 @@
-import { GET_COUNTRIES, GET_COUNTRY, GET_ACTIVITIES, CREATE_ACTIVITY, CLEAN_UP } from "../types";
+import { GET_COUNTRIES, GET_COUNTRY, GET_ACTIVITIES, CREATE_ACTIVITY, CLEAN_UP, ERROR_MSG } from "../types";
 
 
 const initialState = {
   countries: [],
   country: {},
   activities: [],
-  status: 'idle'
+  error: null
 };
 
 export default (state = initialState, action) => {

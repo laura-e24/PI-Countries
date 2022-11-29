@@ -16,17 +16,23 @@ const Activity = (sequelize) => {
     },
     difficulty: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       validate: {
         min: 1,
         max: 5
       }
     },
     duration: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
+      validate: {
+        min: 1,
+        max: 24
+      }
     },
     season: {
-      type:  DataTypes.ENUM("Verano", "Otoño", "Invierno", "Primavera")
+      type:  DataTypes.ENUM("Verano", "Otoño", "Invierno", "Primavera"),
+      allowNull: false
     }
   }, {
     timestamps: false

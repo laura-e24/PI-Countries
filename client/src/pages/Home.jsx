@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useSearchParams  } from 'react-router-dom'
 import styled from 'styled-components'
@@ -31,9 +31,24 @@ const MainContainer = styled.main`
 const Home = () => {
 
   const dispatch  = useDispatch();
+  const [searchParams] = useSearchParams();
+  const name = searchParams.get('name');
+
+  // const fetchError = useSelector((state) => state.error);
   const countries = useSelector((state) => state.countries);
   const activities = useSelector((state) => state.activities);
+
   const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!name) setIsLoading(true)
+      await dispatch(getCountries(name))
+      await dispatch(getActivities())
+      if (!name) setIsLoading(false)
+    }
+    fetchData()
+  }, [name])
 
   const [sorting, setSorting] = useState({
     active: false,
@@ -65,11 +80,9 @@ const Home = () => {
     else return country
   }
 
-
   const sortedArr = sortArr(countries.filter(filterArr), sorting.order, sorting.by)
 
-  const [searchParams] = useSearchParams();
-  const name = searchParams.get('name');
+
   const continents = [...new Set(countries.map(c => c.continent))];
   const activitiesNames = [...new Set(activities.map(c => c.name))];
 
@@ -82,16 +95,6 @@ const Home = () => {
     activity: activitiesNames
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!name) setIsLoading(true)
-      await dispatch(getCountries(name))
-      await dispatch(getActivities())
-      if (!name) setIsLoading(false)
-    }
-    fetchData()
-  }, [name])
-  
   return (  
     <MainContainer>
       <div style={{ width: '100%', display:'flex' }}>
@@ -107,15 +110,15 @@ const Home = () => {
             filteringData={filteringData}
           />
           {!isLoading ? (
-            !!sliceCountries.length ? 
-            <CardsContainer>
-              {sliceCountries.map((country, i) => {
-                return (
-                  <CountryCard country={country} key={i} />
-                )
-              })}
-            </CardsContainer>
-            : <NoResults text={name && `No se encontraron resultados para "${name}"`} />
+            !!sliceCountries.length ? (
+              <CardsContainer>
+                {sliceCountries.map((country, i) => {
+                  return (
+                    <CountryCard country={country} key={i} />
+                  )
+                })}
+              </CardsContainer>
+            ) : <NoResults text={name && `No se han encontrado resultados para "${name}"`} />
           ) : <HomeSkeleton />}
         </div>
       </div>

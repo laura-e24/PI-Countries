@@ -6,6 +6,10 @@ const Select = styled.select`
   border-radius: 6px;
   margin-right: 10px;
   background-color: rgba(217, 217, 217, 0.62);
+  width: 100%;
+  &:focus {
+    border: solid 1px #8278D7;
+  }
   ${({ error }) => error && `
     background: rgba(211, 16, 39, 0.62);
     border: solid 1px rgb(211, 16, 39)

@@ -16,3 +16,5 @@ export const sortArr = (array, order, key) => {
     } else return array;
   })
 }
+
+export const capitalize = string => string.charAt(0).toUpperCase() + string.slice(1);

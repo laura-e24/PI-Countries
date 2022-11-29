@@ -7,11 +7,15 @@ import SideBar from '../components/SideBar';
 
 import { createActivity, getCountries } from "../redux/actions";
 import CustomSelect from '../components/CustomSelect';
+import Loading from '../components/Loading';
+import { capitalize } from '../utils';
+import Toast from '../components/Toast';
 
 const MainContainer = styled.main`
   width: 100%;
   height: 100vh;
   display: flex;
+  position: relative;
 `
 
 const Card = styled.div`
@@ -36,7 +40,7 @@ const Button = styled(ButtonComponent)`
 `
 const RemoveButton = styled.div`
   display: inline;
-  margin: 15px 20px auto 15px;
+  margin: auto 10px;
   padding: 4px 8px;
   border-radius: 999px;
 	border: none;
@@ -55,6 +59,12 @@ const Activity = () => {
 
   const dispatch  = useDispatch();
   const countries = useSelector((state) => state.countries);
+  const [isLoading, setIsLoading] = useState(false)
+  const [toastify, setToastify] = useState({
+    display: false,
+    type: '',
+    text: ''
+  })
 
 
   const [errors, setErrors] = useState({
@@ -103,13 +113,42 @@ const Activity = () => {
         [e.target.name]: errorsMsg[e.target.name]
       })
     }
+
+    if (Number(values.difficulty) < 1 || Number(values.difficulty) > 5) {
+      setErrors({
+        ...errors,
+        difficulty: 'La dificultad debe ser entre 1 y 5.'
+      })
+    }
+    
   }
 
   const handleSubmit = async e => {
     e.preventDefault();
 
-    const response = await  dispatch(createActivity(values))
-    console.log(response)
+    const activity = {
+      ...values,
+      name: capitalize(values.name)
+    }
+
+    try {
+      setIsLoading(true)
+      const response = await  dispatch(createActivity(activity))
+      setIsLoading(false)
+      setToastify({
+        display: true, 
+        type: 'success',
+        text: '¡Actividad creada con éxito!'
+      })
+      console.log(response)
+    } catch (error) {
+      setIsLoading(false)
+      setToastify({
+        display: true, 
+        type: 'error',
+        text: error.response.data.message
+      })
+    }
   }
 
   const removeCountryOption = id => {
@@ -125,7 +164,7 @@ const Activity = () => {
     }
     fetchData()
   }, [])
-
+console.log(errors)
   return (
     <>
       <style>
@@ -141,11 +180,12 @@ const Activity = () => {
           #grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            max-width: 50%
+            column-gap: 1rem;
+            width: 60%
           }
         `}
       </style>
+      <div style={{position:'relative'}}></div>
       <MainContainer>
         <div className='my-auto'>
           <SideBar />
@@ -153,9 +193,9 @@ const Activity = () => {
         <div className='w-full' style={{ marginRight: 20 }}>
           <h2>Crear actividad</h2>
           <Card>
-            <form onSubmit={handleSubmit}>
-              <div id='grid'>
-                <span>
+            <div style={{display:'flex', justifyContent: 'space-between'}}>
+            <form onSubmit={handleSubmit} id='grid'>
+                <div style={{ paddingRight: 20}}>
                   <CustomInput 
                     errors={errors}
                     label='Nombre'
@@ -166,8 +206,8 @@ const Activity = () => {
                     onBlur={handleError}
                   />
                   <ErrorMessage>{errors.name}</ErrorMessage>
-                </span>
-                <span>
+                </div>
+                <div style={{paddingRight: 20}}>
                   <CustomInput 
                     errors={errors}
                     label='Dificultad'
@@ -179,8 +219,8 @@ const Activity = () => {
                     onBlur={handleError}
                   />
                   <ErrorMessage>{errors.difficulty}</ErrorMessage>
-                </span>
-                <span>
+                </div>
+                <div style={{ paddingRight: 20}}>
                   <CustomInput 
                     errors={errors}
                     label='Duración'
@@ -191,22 +231,25 @@ const Activity = () => {
                     onBlur={handleError}
                   />
                   <ErrorMessage>{errors.duration}</ErrorMessage>
-                </span>
-                <span>
-                  <CustomInput 
+                </div>
+                <div style={{ paddingRight: 20}}>
+                  <CustomSelect 
                     errors={errors}
-                    label='Temporada'
+                    label='Temporada' 
                     name='season' 
-                    placeholder='Temporada...'
-                    value={values.season} 
-                    onChange={handleChange}  
                     onBlur={handleError}
-                  />
+                    onChange={handleChange}
+                  >
+                    <option value="">Seleccionar...</option>
+                    <option value='Otoño'>Otoño</option>
+                    <option value='Invierno'>Invierno</option>
+                    <option value='Primavera'>Primavera</option>
+                    <option value='Verano'>Verano</option>
+                  </CustomSelect>
                   <ErrorMessage>{errors.season}</ErrorMessage>
-                </span>
-              </div>
-              <div style={{ display: 'flex' }}>
-                <span>
+                </div>
+                <div style={{  gridColumn: 'span 2 / span 2'}}>
+                <div style={{ paddingRight: 25,width: '50%'}}>
                   <CustomSelect 
                     errors={errors}
                     label='Países' 
@@ -225,17 +268,17 @@ const Activity = () => {
                       }
                     }}
                   >
-                    <option value="">...</option>
+                    <option value="">Seleccionar...</option>
                     {countries.map((country) => (
                       <option key={country.id} value={country.id}>{country.name}</option>
                     ))}
                   </CustomSelect>
                   <ErrorMessage>{errors.countries}</ErrorMessage>
-                </span>
-                <div style={{ display:'flex',  flexWrap: 'wrap',  marginTop: 15, marginLeft: 10  }}>
-                  {values.countries && values.countries.map((c, i) => (
+                </div>
+                <div style={{ display:'flex',  flexWrap: 'wrap',marginLeft: 10  }}>
+                  {values.countries && [...new Set(values.countries)].map((c, i) => (
                     <div style={{ display: 'flex' }} key={i}>
-                      <p style={{  fontWeight: 700, color: '#818181', paddingBottom: 0  }}>{c.name}</p>
+                      <p className='my-auto' style={{  fontWeight: 700, color: '#818181', paddingBottom: 0 }}>{c.name}</p>
                       <RemoveButton onClick={() => removeCountryOption(c.id)}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 50 50" overflow="visible" stroke="black" strokeWidth="10" strokeLinecap="round">
                           <line x2="50" y2="50" strokeWidth="5"/>
@@ -245,15 +288,19 @@ const Activity = () => {
                     </div>
                   ))}
                 </div>
-              </div>
+                </div>
               <div id='button'>
-                <Button disabled={Object.values(values).some(e => !e || !e.length)}>
+                <Button disabled={Object.values(values).some(e => !e || !e.length) || Object.values(errors).some(e => e)}>
                   Crear ✏️
                 </Button>
               </div>
             </form>
+            <img src='/activity.png' width={300} className='my-auto' />
+            </div>
           </Card>
         </div>
+      {isLoading && <Loading text='Creando actividad...' />}
+      {toastify.display && <Toast toastify={toastify} setToastify={setToastify} />}
       </MainContainer>
     </>
   );
