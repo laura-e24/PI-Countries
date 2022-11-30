@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { cleanUpState, getOneCountry } from '../redux/actions';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import SideBar from '../components/SideBar';
 import NoResults from '../components/NoResults';
 import CountrySkeleton from '../components/CountrySkeleton';
 import Layout from '../layouts/Layout';
@@ -63,7 +62,7 @@ const Country = () => {
     }
     fetchData()
     return () => dispatch(cleanUpState())
-  }, [countryId])
+  }, [countryId, dispatch])
 
   return (  
     <>

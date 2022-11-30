@@ -2,7 +2,6 @@ import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import Pagination from "../components/Pagination";
 import SideBar from "../components/SideBar";
-import usePagination from "../hooks/usePagination";
 
 const MainContainer = styled.main`
   padding: 20px;

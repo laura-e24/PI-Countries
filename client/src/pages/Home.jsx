@@ -32,7 +32,7 @@ const Home = () => {
       if (!name) setIsLoading(false)
     }
     fetchData()
-  }, [name])
+  }, [name, dispatch])
 
   const [sorting, setSorting] = useState({
     active: false,

@@ -169,7 +169,7 @@ const Activity = () => {
       await dispatch(getCountries())
     }
     fetchData()
-  }, [])
+  }, [dispatch])
 
   return (
     <>
@@ -285,7 +285,7 @@ const Activity = () => {
                 </Button>
               </div>
             </Form>
-            <img src='/activity.png' width={300} className='my-auto' />
+            <img alt='activity' src='/activity.png' width={300} className='my-auto' />
           </div>
         </Card>
       </Layout>

@@ -29,7 +29,7 @@ const NoResults = ({ text = '', status = undefined, style = {} }) => {
     <Container style={style}>
       {status && <Status>─ {status} ─</Status>}
       <Text>{text || defaultText}</Text>
-      <img height={120} style={{display: 'flex', marginTop: 10 }} className='mx-auto' src='/not-found.png' />
+      <img alt='no-results' height={120} style={{display: 'flex', marginTop: 10 }} className='mx-auto' src='/not-found.png' />
     </Container>
   );
 }
