@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useSearchParams  } from 'react-router-dom'
-import styled from 'styled-components'
 import CountryCard from '../components/CountryCard';
 import FilterAndSortBar from '../components/FilterAndSortBar';
 import NoResults from '../components/NoResults';

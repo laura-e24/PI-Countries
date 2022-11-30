@@ -16,23 +16,20 @@ const Select = styled.select`
   `}
 `
 
+const Label = styled.label`
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 5px !important;
+  width: 100%;
+  display: block;
+`
+
 const CustomSelect = ({ children, onChange, name, label, errors, onBlur }) => {
 
   return (  
     <>
-      <style>
-        {`
-          #label {
-            font-size: 17px;
-            font-weight: 700;
-            margin-bottom: 5px !important;
-            width: 100%;
-            display: block;
-          }
-        `}
-      </style>
       <div style={{ marginBottom: 10, display: 'block'}}>
-        <label id="label">{label}</label>
+        <Label>{label}</Label>
         <Select 
           error={errors[name]}
           name={name} 

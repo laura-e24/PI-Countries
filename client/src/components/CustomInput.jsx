@@ -15,23 +15,20 @@ const Input = styled.input`
   `}
 `
 
+const Label = styled.label`
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 5px !important;
+  width: 100%;
+  display: block;
+`
+
 const CustomInput = ({ label, type = 'text', name, value, onChange, onBlur, placeholder = '', errors }) => {
 
   return (  
     <>
-      <style>
-        {`
-          #label {
-            font-size: 17px;
-            font-weight: 700;
-            margin-bottom: 5px !important;
-            width: 100%;
-            display: block;
-          }
-        `}
-      </style>
       <div style={{ marginBottom: 10, display: 'block' }}>
-        <label htmlFor={name} id="label">{label}</label>
+        <Label htmlFor={name}>{label}</Label>
         <Input 
           error={errors[name]}
           placeholder={placeholder} 

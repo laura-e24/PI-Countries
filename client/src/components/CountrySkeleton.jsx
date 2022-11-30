@@ -49,7 +49,7 @@ const CountrySkeleton = () => {
         <TitleSkeleton className="animation-pulse"></TitleSkeleton>
         <CardsContainer>
           <Card>
-            <div style={{ display: 'flex'}}>
+            <div className="flex">
               <Skeleton className="animation-pulse my-auto" style={{ marginLeft: 10 }}></Skeleton>
               <div className="w-full" style={{ display: 'block'}}>
                 <TextSkeleton className="animation-pulse"></TextSkeleton>
@@ -65,7 +65,7 @@ const CountrySkeleton = () => {
         <CardsContainer>
           {new Array(2).fill(0).map((_, index) => (
             <Card key={index}>
-              <div style={{ display: 'flex' }}>
+              <div className="flex">
                 <Skeleton className="animation-pulse my-auto" style={{ width: 120, height: 50 }}></Skeleton>
                 <div style={{ width: '50%' }}>
                   <TextSkeleton className="animation-pulse"></TextSkeleton>

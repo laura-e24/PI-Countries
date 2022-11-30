@@ -2,9 +2,6 @@ import styled from "styled-components";
 
 const Container = styled.div`
   padding: 20px 0;
-  /* display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between; */
 `
 const Button = styled.button`
   background: none;
@@ -21,14 +18,6 @@ const Button = styled.button`
 const Select = styled.select`
   all: unset;
   padding: 8px 10px;
-  border-radius: 6px;
-  margin-right: 10px;
-  background-color: rgba(217, 217, 217, 0.62);
-`
-
-const Option = styled.option`
-  all: unset;
-  padding: 8px 8px;
   border-radius: 6px;
   margin-right: 10px;
   background-color: rgba(217, 217, 217, 0.62);

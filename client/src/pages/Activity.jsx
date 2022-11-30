@@ -3,20 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from 'styled-components';
 import { ButtonComponent } from '../components/GenericButton';
 import CustomInput from '../components/CustomInput';
-import SideBar from '../components/SideBar';
+import Layout from '../layouts/Layout';
 
 import { createActivity, getCountries } from "../redux/actions";
 import CustomSelect from '../components/CustomSelect';
 import Loading from '../components/Loading';
 import { capitalize } from '../utils';
 import Toast from '../components/Toast';
-
-const MainContainer = styled.main`
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  position: relative;
-`
 
 const Card = styled.div`
   padding: 20px;
@@ -53,6 +46,19 @@ const RemoveButton = styled.div`
 const ErrorMessage = styled.span`
   color: rgba(211, 16, 39);
   font-weight: 300;
+`
+
+const Form = styled.form`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 1rem;
+  width: 60%
+`
+
+const H2 = styled.h2`
+  font-size: 35px;
+  font-weight: 700;
+  margin-bottom: 10px
 `
 
 const Activity = () => {
@@ -164,37 +170,21 @@ const Activity = () => {
     }
     fetchData()
   }, [])
-console.log(errors)
+
   return (
     <>
       <style>
         {`
-          h2 {
-            font-size: 35px;
-            font-weight: 700;
-            margin-bottom: 10px
-          }
           #button {
             grid-column: span 2 / span 2;
           }
-          #grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            column-gap: 1rem;
-            width: 60%
-          }
         `}
       </style>
-      <div style={{position:'relative'}}></div>
-      <MainContainer>
-        <div className='my-auto'>
-          <SideBar />
-        </div>
-        <div className='w-full' style={{ marginRight: 20 }}>
-          <h2>Crear actividad</h2>
-          <Card>
-            <div style={{display:'flex', justifyContent: 'space-between'}}>
-            <form onSubmit={handleSubmit} id='grid'>
+      <Layout>
+        <H2>Crear actividad</H2>
+        <Card>
+          <div style={{display:'flex', justifyContent: 'space-between'}}>
+            <Form onSubmit={handleSubmit}>
                 <div style={{ paddingRight: 20}}>
                   <CustomInput 
                     errors={errors}
@@ -294,14 +284,13 @@ console.log(errors)
                   Crear ✏️
                 </Button>
               </div>
-            </form>
+            </Form>
             <img src='/activity.png' width={300} className='my-auto' />
-            </div>
-          </Card>
-        </div>
+          </div>
+        </Card>
+      </Layout>
       {isLoading && <Loading text='Creando actividad...' />}
-      {toastify.display && <Toast toastify={toastify} setToastify={setToastify} />}
-      </MainContainer>
+      {toastify.display && <Toast toastify={toastify} setToastify={setToastify} />} 
     </>
   );
 }
