@@ -4,8 +4,8 @@ import { GET_COUNTRIES, GET_COUNTRY, GET_ACTIVITIES, CREATE_ACTIVITY, CLEAN_UP }
 export const getCountries = (name = undefined) => {
   return async (dispatch) => {
     const response = await axios(name
-      ? `http://localhost:3001/countries?name=${name}`
-      : `http://localhost:3001/countries`
+      ? `/countries?name=${name}`
+      : `/countries`
     )
 
     return dispatch({ type: GET_COUNTRIES, payload: response.data })
@@ -14,7 +14,7 @@ export const getCountries = (name = undefined) => {
 
 export const getOneCountry = (countryId) => {
   return async (dispatch) => {
-    const response = await axios(`http://localhost:3001/countries/${countryId}`)
+    const response = await axios(`/countries/${countryId}`)
   
     return dispatch({ type: GET_COUNTRY, payload: response.data })
   }
@@ -22,7 +22,7 @@ export const getOneCountry = (countryId) => {
 
 export const getActivities = () => {
   return async (dispatch) => {
-    const response = await axios(`http://localhost:3001/activities`)
+    const response = await axios(`/activities`)
 
     return dispatch({ type: GET_ACTIVITIES, payload: response.data })
   }
@@ -30,7 +30,7 @@ export const getActivities = () => {
 
 export const createActivity = (activity) => {
   return async (dispatch) => {
-    const response = await axios.post(`http://localhost:3001/activities`, activity)
+    const response = await axios.post(`/activities`, activity)
   
     return dispatch({ type: CREATE_ACTIVITY, payload: response.data })
   }
