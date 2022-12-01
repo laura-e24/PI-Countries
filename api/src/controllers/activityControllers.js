@@ -31,6 +31,7 @@ const createActivity = async (req, res) => {
 
     res.json({ activity: newActivity })
   } catch (error) {
+    console.log(error.message)
     if (!name || !difficulty || !duration || !season)
       res.status(400).json({ message: 'Falta la información necesaria para crear una actividad.' })
 

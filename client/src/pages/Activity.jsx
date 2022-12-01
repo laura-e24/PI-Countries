@@ -8,7 +8,7 @@ import Layout from '../layouts/Layout';
 import { createActivity, getCountries } from "../redux/actions";
 import CustomSelect from '../components/CustomSelect';
 import Loading from '../components/Loading';
-import { capitalize } from '../utils';
+import { capitalize, sortArr } from '../utils';
 import Toast from '../components/Toast';
 
 const Card = styled.div`
@@ -260,7 +260,7 @@ const Activity = () => {
                     }}
                   >
                     <option value="">Seleccionar...</option>
-                    {countries.map((country) => (
+                    {sortArr(countries, 'asc', 'name').map((country) => (
                       <option key={country.id} value={country.id}>{country.name}</option>
                     ))}
                   </CustomSelect>
