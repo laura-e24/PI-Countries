@@ -121,7 +121,7 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
             >
               <option value="">...</option>
               {!!filteringData[f].length ? (
-                sortArr(filteringData[f], 'asc', data.name).map((data, index) => (
+                sortArr(filteringData[f], 'asc', sorting.by).map((data, index) => (
                   <option key={index} value={data}>{data}</option>
                 ))
               ) : (
