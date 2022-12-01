@@ -134,7 +134,7 @@ const Activity = () => {
 
     const activity = {
       ...values,
-      name: capitalize(values.name)
+      name: capitalize(values.name.toLocaleLowerCase())
     }
 
     try {
