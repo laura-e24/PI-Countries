@@ -35,7 +35,7 @@ const createActivity = async (req, res) => {
     if (!name || !difficulty || !duration || !season)
       res.status(400).json({ message: 'Falta la información necesaria para crear una actividad.' })
 
-    else if (error.message.includes('llave duplicada'))
+    else if (error.message.includes('llave duplicada') || error.message.includes('Validation error'))
       res.status(400).json({ message: `No se puede crear la actividad. Ya existe una con el nombre "${name}"` })
     
     else 
