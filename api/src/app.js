@@ -11,22 +11,14 @@ require('./db.js');
 const server = express();
 
 server.name = 'API';
+const corsConfig = {
+  origin: ['https://henrycountries-laura-e24.vercel.app'],
+  credentials: true,
+  methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
+  allowedHeaders: ['Content-Type']
+};
 
-const whitelist = ['https://henrycountries-laura-e24.vercel.app']
-
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (whitelist.includes(origin)) {
-      // Puede consultar la API
-      callback(null, true)
-    } else {
-      // No puede consultar la API
-      callback(new Error('Error de CORS'))
-    }
-  }
-}
-
-server.use(cors(corsOptions))
+server.use(cors(corsConfig))
 server.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 server.use(bodyParser.json({ limit: '50mb' }));
 server.use(cookieParser());
