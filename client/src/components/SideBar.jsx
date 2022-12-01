@@ -87,7 +87,6 @@ const SideBar = () => {
     e.preventDefault();
 
     const response = await  dispatch(getCountries(search))
-    console.log(response)
     navigate(
       search 
       ? `/home?name=${search}`

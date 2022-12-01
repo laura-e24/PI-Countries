@@ -11,14 +11,14 @@ require('./db.js');
 const server = express();
 
 server.name = 'API';
-const corsConfig = {
-  origin: ['https://henrycountries-laura-e24.vercel.app', 'https://henrycountries-laura-e24.vercel.app/countries'],
-  credentials: true,
-  methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
-  allowedHeaders: ['Content-Type']
-};
+// const corsConfig = {
+//   origin: ['https://henrycountries-laura-e24.vercel.app', 'https://henrycountries-laura-e24.vercel.app/countries'],
+//   credentials: true,
+//   methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
+//   allowedHeaders: ['Content-Type']
+// };
 
-server.use(cors(corsConfig))
+// server.use(cors(corsConfig))
 server.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 server.use(bodyParser.json({ limit: '50mb' }));
 server.use(cookieParser());

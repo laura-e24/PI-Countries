@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { sortArr } from "../utils";
 
 const Container = styled.div`
   padding: 20px 0;
@@ -119,9 +120,13 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
               name={f}
             >
               <option value="">...</option>
-              {filteringData[f].map((data, index) => (
-                <option key={index} value={data}>{data}</option>
-              ))}
+              {!!filteringData[f].length ? (
+                sortArr(filteringData[f], 'asc', data.name).map((data, index) => (
+                  <option key={index} value={data}>{data}</option>
+                ))
+              ) : (
+                <option value=''>No hay elementos.</option>
+              )}
             </Select>
           ))}
         </div>

@@ -120,7 +120,7 @@ const Activity = () => {
       })
     }
 
-    if (Number(values.difficulty) < 1 || Number(values.difficulty) > 5) {
+    if (values.difficulty < 1 || values.difficulty > 5) {
       setErrors({
         ...errors,
         difficulty: 'La dificultad debe ser entre 1 y 5.'
@@ -148,6 +148,7 @@ const Activity = () => {
       })
       console.log(response)
     } catch (error) {
+      console.log(error.response)
       setIsLoading(false)
       setToastify({
         display: true, 

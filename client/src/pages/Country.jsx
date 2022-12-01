@@ -128,7 +128,7 @@ const Country = () => {
                     </tr>
                     <tr>
                       <Td className='att'>Duración</Td>
-                      <Td className='data'>{act.duration}</Td>
+                      <Td className='data'>{act.duration} horas</Td>
                     </tr>
                     <tr>
                       <Td className='att'>Dificultad</Td>
