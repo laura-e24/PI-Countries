@@ -87,7 +87,7 @@ const Home = () => {
       currentData={currentData}
       currentPage={currentPage}
       pages={pages}
-      showPagination={!!sliceCountries.length && location.pathname.includes('home')}
+      showPagination={location.pathname.includes('home')}
      >
       <FilterAndSortBar 
         sorting={sorting}

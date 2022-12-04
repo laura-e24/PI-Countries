@@ -113,20 +113,20 @@ const Activity = () => {
       countries: 'País(es) requerido(s).'
     }
 
+
+    if (values.difficulty && (values.difficulty < 1 || values.difficulty > 5)) {
+      setErrors({
+        ...errors,
+        difficulty: 'La dificultad debe ser entre 1 y 5.'
+      })
+    }
+
     if (!values[e.target.name] || (!values[e.target.name].length)) {
       setErrors({
         ...errors,
         [e.target.name]: errorsMsg[e.target.name]
       })
     }
-
-    if (values.difficulty < 1 || values.difficulty > 5) {
-      setErrors({
-        ...errors,
-        difficulty: 'La dificultad debe ser entre 1 y 5.'
-      })
-    }
-    
   }
 
   const handleSubmit = async e => {
@@ -213,6 +213,7 @@ const Activity = () => {
                 </div>
                 <div style={{ paddingRight: 20}}>
                   <CustomInput 
+                    type='number' 
                     errors={errors}
                     label='Duración'
                     name='duration' 
