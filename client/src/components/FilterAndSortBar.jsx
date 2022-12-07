@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { sortArr } from "../utils";
 
 const Container = styled.div`
   padding: 20px 0;
@@ -24,15 +23,30 @@ const Select = styled.select`
   background-color: rgba(217, 217, 217, 0.62);
 `
 
-const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filteringData }) => {
+const FiltersList = ({ filtering, filter, removeFilter }) => (
+  filtering[filter]?.values.map((f, index) => (
+    <span className="filter" key={index}>
+      {f}
+    <span className="remove-btn" onClick={() => removeFilter(filter, f)}>
+      X
+    </span>
+    </span>
+  ))
+)
 
-  const removeFilter = filter => {
-    setFiltering(
-      filtering.values.length === 1 
-      ? { active: false, by: [], values: [] }
-      : { ...filtering, values: filtering.values.filter(f => f !== filter) }
-    )
+const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filteringData, handleSort, handleFilter }) => {
+
+  const removeFilter = (filter, value) => {
+    const filterValues =  filtering.continents?.values.concat(filtering.activities?.values)
+    if (filterValues.length === 1 ) {
+      setFiltering({ active: false, [filter]: { active: false, values: [] } })
+      handleFilter(false, { active: false, values: [] }, { active: false, values: [] })
+    } else {
+      setFiltering({ ...filtering, [filter]: { ...filtering[filter], values: filtering[filter]?.values.filter(f => f !== value) } })
+      handleFilter(filtering.active, { ...filtering.continents, values: filtering.continents?.values.filter(f => f !== value) }, { ...filtering.activities, values: filtering.activities?.values.filter(f => f !== value) })
+    }
   }
+
   return (  
     <>
       <style>
@@ -67,6 +81,7 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
                 ? { active: false, by: '', order: '' }
                 : { ...sorting, active: true }
               )
+              if (sorting.active) handleSort(false, '', '')
             }}
           >
             Ordenar
@@ -74,7 +89,10 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
           {sorting.active && (
             <Select 
               name="orderBy" 
-              onChange={e => setSorting({ ...sorting, by: e.target.value})}
+              onChange={e =>  {
+                setSorting({ ...sorting, by: e.target.value})
+                if (sorting.by) handleSort(sorting.active, e.target.value, sorting.order)
+              }}
             >
               <option value="">...</option>
               <option value="population">Población</option>
@@ -83,7 +101,10 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
           )}
           {sorting.active && sorting.by && (
             <Select 
-              onChange={e => setSorting({ ...sorting, order: e.target.value })} 
+              onChange={e => {
+                setSorting({ ...sorting, order: e.target.value })
+                handleSort(sorting.active, sorting.by, e.target.value)
+              }} 
               name="orderAs"
             >
               <option value="">...</option>
@@ -96,52 +117,69 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
             onClick={() => {
               setFiltering(
                 filtering.active 
-                ? { active: false, by: [], values: [] }
+                ? { active: false, continents: { active: false, values: [] }, activities: { active: false, values: [] } }
                 : { ...filtering, active: true }
               )
+              if (filtering.active) handleFilter(false, { active: false, values: [] }, { active: false, values: [] })
             }}
           >
             Filtrar
           </Button>
           {filtering.active && (
             <Select 
-              onChange={(e) => setFiltering({ ...filtering, by: filtering.by.concat(e.target.value) })} 
+              onChange={(e) => {
+                setFiltering({ ...filtering, [e.target.value]: { active: true, values: [] } })
+                if (!!filtering[e.target.value]?.values.length) handleFilter(filtering.active, filtering.continents, filtering.activities)
+              }} 
               name="filterBy"
             >
               <option value="">...</option>
-              <option value="continent">Continente</option>
-              <option value="activity">Actividad turística</option>
+              <option value="continents">Continente</option>
+              <option value="activities">Actividad turística</option>
             </Select>
           )}
-          {filtering.active && filtering.by.map((f, i) => (
+          {filtering.active && filtering.continents?.active && (
             <Select 
-              key={i}
-              onChange={(e) => setFiltering({ ...filtering, values: filtering.values.concat(e.target.value) })} 
-              name={f}
+              onChange={(e) => {
+                setFiltering({ ...filtering, continents: { ...filtering.continents, values: filtering.continents.values.concat(e.target.value) }  })
+                handleFilter(filtering.active, { ...filtering.continents, values: filtering.continents.values.concat(e.target.value) }, filtering.activities)              
+              }} 
+              name='continents'
             >
               <option value="">...</option>
-              {!!filteringData[f].length ? (
-                sortArr(filteringData[f], 'asc', sorting.by).map((data, index) => (
+              {!!filteringData.continents.length ? (
+                filteringData.continents.map((data, index) => (
                   <option key={index} value={data}>{data}</option>
                 ))
               ) : (
                 <option value=''>No hay elementos.</option>
               )}
             </Select>
-          ))}
+          )}
+          {filtering.active && filtering.activities?.active && (
+            <Select 
+              onChange={(e) => {
+                setFiltering({ ...filtering, activities: { ...filtering.activities, values: filtering.activities.values.concat(e.target.value) }  })
+                handleFilter(filtering.active, filtering.continents, { ...filtering.activities, values: filtering.activities.values.concat(e.target.value) })              
+              }} 
+              name='activities'
+            >
+              <option value="">...</option>
+              {!!filteringData.activities.length ? (
+                filteringData.activities.map((data, index) => (
+                  <option key={index} value={data}>{data}</option>
+                ))
+              ) : (
+                <option value=''>No hay elementos.</option>
+              )}
+            </Select>
+          )}
         </div>
-        {!!filtering.values.length && (
+        {(!!filtering.continents?.values.length || !!filtering.activities?.values.length) && (
           <div style={{ marginTop: 8 }}>
-            <span id='span'>Filtros aplicados:</span> {!!filtering.values.length && (
-              [...new Set(filtering.values)].map((filter, index) => (
-                <span className="filter" key={index}>
-                {filter}
-                <span className="remove-btn" onClick={() => removeFilter(filter)}>
-                  X
-                </span>
-                </span>
-              ))
-            )}
+            <span id='span'>Filtros aplicados: &nbsp;</span> 
+              {!!filtering.continents?.values.length && <FiltersList filtering={filtering} filter='continents' removeFilter={removeFilter} />}
+              {!!filtering.activities?.values.length && <FiltersList filtering={filtering} filter='activities' removeFilter={removeFilter} />}
           </div>
         )}
       </Container>

@@ -6,8 +6,7 @@ import FilterAndSortBar from '../components/FilterAndSortBar';
 import NoResults from '../components/NoResults';
 import usePagination from '../hooks/usePagination';
 
-import { getActivities, getCountries } from '../redux/actions';
-import { sortArr } from '../utils';
+import { filterCountries, getActivities, getCountries, sortCountries } from '../redux/actions';
 import HomeSkeleton from '../components/HomeSkeleton';
 import Layout from '../layouts/Layout';
 import CardsContainer from '../components/CardsContainer';
@@ -42,41 +41,53 @@ const Home = () => {
 
   const [filtering, setFiltering] = useState({
     active: false,
-    by: [],
-    values: []
+    activities: {
+      active: false,
+      values: []
+    },
+    continents: {
+      active: false,
+      values: []
+    },
   })
 
-  const filterArr = country => {
-    const activitiesNames = country.Activities.map(a => a.name);
-
-    // Si filtramos por sólo una opción, retornamos aquellos países
-    // que contengan o el continente o la actividad filtrada
-    if (!!filtering.values.length) 
-      return filtering.values.some(v => activitiesNames.indexOf(v) >= 0) || filtering.values.includes(country.continent)
-
-    //  En cambio, si filtramos tanto por continente como por actividad a la vez,
-    // retorno aquellos países que contengan AMBAS características simultáneamente
-    // else if (filtering.by.includes('activity') && filtering.by.includes('continent') && !!filtering.values.length) 
-    //   return filtering.values.some(v => activitiesNames.indexOf(v) >= 0) && filtering.values.includes(country.continent)
-
-    // Para evitar que el array se vacíe y no se renderice nada al no aplicar filtros,
-    // debemos retornar el array sin modificar
-    else return country
+  const handleSort = (active, by, order) => {
+    const payload = {
+      active,
+      by,
+      order
+    }
+    dispatch(sortCountries(payload))
   }
 
-  const sortedArr = sortArr(countries.filter(filterArr), sorting.order, sorting.by)
+  const handleFilter = (active, ...other) => {
+    const [continents, activities] = other
+    const payload = {
+      active,
+      continents,
+      activities,
+    }
+    dispatch(filterCountries(payload))
+  }
 
-
-  const continents = [...new Set(countries.map(c => c.continent))];
+  const continents = [
+    'South America',
+    'North America',
+    'Africa',
+    'Asia',
+    'Oceania',
+    'Antarctica',
+    'Europe',
+  ];
   const activitiesNames = [...new Set(activities.map(c => c.name))];
 
 
-  const { next, prev, jump, currentData, currentPage, pages } = usePagination(sortedArr)
+  const { next, prev, jump, currentData, currentPage, pages } = usePagination(countries)
   const sliceCountries = currentData()
 
   const filteringData = {
-    continent: continents,
-    activity: activitiesNames
+    continents: continents,
+    activities: activitiesNames
   }
 
   return (  
@@ -95,6 +106,8 @@ const Home = () => {
         setSorting={setSorting}
         setFiltering={setFiltering}
         filteringData={filteringData}
+        handleSort={handleSort}
+        handleFilter={handleFilter}
       />
       {!isLoading ? (
         !!sliceCountries.length ? (

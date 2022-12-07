@@ -2,4 +2,6 @@ export const GET_COUNTRIES = 'GET_COUNTRIES';
 export const GET_COUNTRY = 'GET_COUNTRY';
 export const GET_ACTIVITIES = 'GET_ACTIVITIES';
 export const CREATE_ACTIVITY = 'CREATE_ACTIVITY';
+export const SORT_COUNTRIES = 'SORT_COUNTRIES';
+export const FILTER_COUNTRIES = 'FILTER_COUNTRIES';
 export const CLEAN_UP = 'CLEAN_UP';
