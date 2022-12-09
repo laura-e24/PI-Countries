@@ -24,7 +24,7 @@ const Select = styled.select`
 `
 
 const FiltersList = ({ filtering, filter, removeFilter }) => (
-  filtering[filter]?.values.map((f, index) => (
+  [...new Set(filtering[filter]?.values)].map((f, index) => (
     <span className="filter" key={index}>
       {f}
     <span className="remove-btn" onClick={() => removeFilter(filter, f)}>
