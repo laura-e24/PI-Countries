@@ -7,7 +7,6 @@ import Layout from '../layouts/Layout';
 
 import { createActivity, getCountries } from "../redux/actions";
 import CustomSelect from '../components/CustomSelect';
-import Loading from '../components/Loading';
 import { capitalize, sortArr } from '../utils';
 import Toast from '../components/Toast';
 
@@ -65,7 +64,6 @@ const Activity = () => {
 
   const dispatch  = useDispatch();
   const countries = useSelector((state) => state.countries);
-  const [isLoading, setIsLoading] = useState(false)
   const [toastify, setToastify] = useState({
     display: false,
     type: '',
@@ -138,9 +136,7 @@ const Activity = () => {
     }
 
     try {
-      setIsLoading(true)
       const response = await  dispatch(createActivity(activity))
-      setIsLoading(false)
       setToastify({
         display: true, 
         type: 'success',
@@ -149,7 +145,6 @@ const Activity = () => {
       console.log(response)
     } catch (error) {
       console.log(error.response)
-      setIsLoading(false)
       setToastify({
         display: true, 
         type: 'error',
@@ -291,7 +286,6 @@ const Activity = () => {
           </div>
         </Card>
       </Layout>
-      {isLoading && <Loading text='Creando actividad...' />}
       {toastify.display && <Toast toastify={toastify} setToastify={setToastify} />} 
     </>
   );

@@ -23,12 +23,16 @@ const Home = () => {
 
   const [isLoading, setIsLoading] = useState(false)
 
+  const { next, prev, jump, currentData, currentPage, pages } = usePagination(countries)
+  const sliceCountries = currentData()
+
   useEffect(() => {
     const fetchData = async () => {
       if (!name) setIsLoading(true)
       await dispatch(getCountries(name))
-      await dispatch(getActivities())
       if (!name) setIsLoading(false)
+
+      await dispatch(getActivities())
     }
     fetchData()
   }, [name, dispatch])
@@ -80,10 +84,6 @@ const Home = () => {
     'Europe',
   ];
   const activitiesNames = [...new Set(activities.map(c => c.name))];
-
-
-  const { next, prev, jump, currentData, currentPage, pages } = usePagination(countries)
-  const sliceCountries = currentData()
 
   const filteringData = {
     continents: continents,

@@ -4,7 +4,6 @@ const Card = styled.nav`
   display: flex;
   padding: 12px;
   flex-wrap: wrap;
-  /* max-width: 100%; */
   justify-content: space-between;
   background-color: rgba(237, 236, 236, 1);
   border-radius: 10px;
@@ -49,6 +48,7 @@ const Pagination = ({next, prev, jump, currentPage, pages }) => {
 
   return (  
     <div>
+     {!!pages && (
       <Card>
         <Button onClick={() => prev()}>{"<"}</Button>
         {new Array(pages).fill(0).map((_, index) => {
@@ -64,6 +64,7 @@ const Pagination = ({next, prev, jump, currentPage, pages }) => {
         })}
         <Button onClick={() => next()}>{">"}</Button>
       </Card>
+     )}
     </div>
   );
 }

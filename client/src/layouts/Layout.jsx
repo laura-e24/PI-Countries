@@ -17,7 +17,7 @@ const Layout = ({ children, showPagination, next, prev, jump, currentData, curre
       <MainContainer>
         <div className="w-full flex">
           <div>
-            <SideBar />
+            <SideBar jump={jump} />
           </div>
           <div className='w-full'>
             {children}

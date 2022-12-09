@@ -5,7 +5,6 @@ import styled from 'styled-components'
 import { getCountries } from '../redux/actions'
 
 const SideBarComponent = styled.aside`
-  /* max-width: 20%; */
   padding: 20px 25px;
   background-color: rgba(237, 236, 236, 1);
   height: calc(100vh - 70px);
@@ -77,21 +76,24 @@ const Input = styled.input`
   margin-right: 10px;
   background-color: rgba(217, 217, 217, 0.62);
 `
-const SideBar = () => {
+const SideBar = ({ jump }) => {
 
   const dispatch  = useDispatch();
   const location = useLocation()
   const [search, setSearch] = useState('')
   let navigate = useNavigate();
+
   const handleSubmit = async e => {
     e.preventDefault();
 
-    const response = await  dispatch(getCountries(search))
+    await  dispatch(getCountries(search))
     navigate(
       search 
       ? `/home?name=${search}`
       : '/home'
     );
+    jump(0)
+    setSearch('')
   }
 
   return (  
@@ -116,7 +118,7 @@ const SideBar = () => {
           </div>
         </form>
         <Menu>
-          <Link to='/home' style={{ textDecoration: 'none' }}>
+          <Link onClick={() => jump(0)} to='/home' style={{ textDecoration: 'none' }}>
             <MenuItem active={location.pathname.includes('home')}>🏠 Home</MenuItem>
           </Link>
           <Link to='/activities/create' style={{ textDecoration: 'none' }}>

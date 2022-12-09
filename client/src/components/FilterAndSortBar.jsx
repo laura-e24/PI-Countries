@@ -36,14 +36,26 @@ const FiltersList = ({ filtering, filter, removeFilter }) => (
 
 const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filteringData, handleSort, handleFilter }) => {
 
+  const defaultValues = { active: false, values: [] }
+
   const removeFilter = (filter, value) => {
     const filterValues =  filtering.continents?.values.concat(filtering.activities?.values)
     if (filterValues.length === 1 ) {
-      setFiltering({ active: false, [filter]: { active: false, values: [] } })
-      handleFilter(false, { active: false, values: [] }, { active: false, values: [] })
+      setFiltering({ active: false, [filter]: defaultValues })
+      handleFilter(false, defaultValues, defaultValues)
     } else {
-      setFiltering({ ...filtering, [filter]: { ...filtering[filter], values: filtering[filter]?.values.filter(f => f !== value) } })
-      handleFilter(filtering.active, { ...filtering.continents, values: filtering.continents?.values.filter(f => f !== value) }, { ...filtering.activities, values: filtering.activities?.values.filter(f => f !== value) })
+      setFiltering({ 
+        ...filtering, 
+        [filter]: { 
+          ...filtering[filter], 
+          values: filtering[filter]?.values.filter(f => f !== value) 
+        } 
+      })
+      handleFilter(
+        filtering.active, 
+        { ...filtering.continents, values: filtering.continents?.values.filter(f => f !== value) }, 
+        { ...filtering.activities, values: filtering.activities?.values.filter(f => f !== value) }
+      )
     }
   }
 
@@ -74,6 +86,101 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
       </style>
       <Container>
         <div>
+          
+          <Button 
+            style={{ marginRight: 10 }} 
+            onClick={() => {
+              setFiltering(
+                filtering.active 
+                ? { 
+                  active: false, 
+                  continents: { active: false, values: [] }, 
+                  activities: { active: false, values: [] } 
+                }
+                : { ...filtering, active: true }
+              )
+
+              if (filtering.active) 
+                handleFilter(false, { active: false, values: [] }, { active: false, values: [] })
+            }}
+          >
+            Filtrar
+          </Button>
+          {filtering.active && (
+            <Select 
+              onChange={(e) => {
+                setFiltering({ 
+                  ...filtering, 
+                  [e.target.value]: { active: true, values: [] } 
+                })
+
+                if (!!filtering[e.target.value]?.values.length) 
+                  handleFilter(filtering.active, filtering.continents, filtering.activities)
+              }} 
+              name="filterBy"
+            >
+              <option value="">...</option>
+              <option value="continents">Continente</option>
+              <option value="activities">Actividad turística</option>
+            </Select>
+          )}
+          {filtering.active && filtering.continents?.active && (
+            <Select 
+              onChange={async (e) => {
+                setFiltering({ 
+                  ...filtering, 
+                  continents: { 
+                    ...filtering.continents, 
+                    values: filtering.continents.values.concat(e.target.value) 
+                  }  
+                })
+
+                await handleFilter(
+                  filtering.active, 
+                  { ...filtering.continents, values: filtering.continents.values.concat(e.target.value) }, 
+                  filtering.activities
+                )
+              }} 
+              name='continents'
+            >
+              <option value="">...</option>
+              {!!filteringData.continents.length ? (
+                filteringData.continents.map((data, index) => (
+                  <option key={index} value={data}>{data}</option>
+                ))
+              ) : (
+                <option value=''>No hay elementos.</option>
+              )}
+            </Select>
+          )}
+          {filtering.active && filtering.activities?.active && (
+            <Select 
+              onChange={(e) => {
+                setFiltering({ 
+                  ...filtering, 
+                  activities: { 
+                    ...filtering.activities, 
+                    values: filtering.activities.values.concat(e.target.value) 
+                  }  
+                })
+                handleFilter(
+                  filtering.active, 
+                  filtering.continents, 
+                  { ...filtering.activities, values: filtering.activities.values.concat(e.target.value) }
+                )
+              }} 
+              name='activities'
+            >
+              <option value="">...</option>
+              {!!filteringData.activities.length ? (
+                filteringData.activities.map((data, index) => (
+                  <option key={index} value={data}>{data}</option>
+                ))
+              ) : (
+                <option value=''>No hay elementos.</option>
+              )}
+            </Select>
+          )}
           <Button 
             onClick={() => {
               setSorting(
@@ -110,68 +217,6 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
               <option value="">...</option>
               <option value="asc">Ascendente</option>
               <option value="desc">Descendente</option>
-            </Select>
-          )}
-          <Button 
-            style={{ marginLeft: 10 }} 
-            onClick={() => {
-              setFiltering(
-                filtering.active 
-                ? { active: false, continents: { active: false, values: [] }, activities: { active: false, values: [] } }
-                : { ...filtering, active: true }
-              )
-              if (filtering.active) handleFilter(false, { active: false, values: [] }, { active: false, values: [] })
-            }}
-          >
-            Filtrar
-          </Button>
-          {filtering.active && (
-            <Select 
-              onChange={(e) => {
-                setFiltering({ ...filtering, [e.target.value]: { active: true, values: [] } })
-                if (!!filtering[e.target.value]?.values.length) handleFilter(filtering.active, filtering.continents, filtering.activities)
-              }} 
-              name="filterBy"
-            >
-              <option value="">...</option>
-              <option value="continents">Continente</option>
-              <option value="activities">Actividad turística</option>
-            </Select>
-          )}
-          {filtering.active && filtering.continents?.active && (
-            <Select 
-              onChange={(e) => {
-                setFiltering({ ...filtering, continents: { ...filtering.continents, values: filtering.continents.values.concat(e.target.value) }  })
-                handleFilter(filtering.active, { ...filtering.continents, values: filtering.continents.values.concat(e.target.value) }, filtering.activities)              
-              }} 
-              name='continents'
-            >
-              <option value="">...</option>
-              {!!filteringData.continents.length ? (
-                filteringData.continents.map((data, index) => (
-                  <option key={index} value={data}>{data}</option>
-                ))
-              ) : (
-                <option value=''>No hay elementos.</option>
-              )}
-            </Select>
-          )}
-          {filtering.active && filtering.activities?.active && (
-            <Select 
-              onChange={(e) => {
-                setFiltering({ ...filtering, activities: { ...filtering.activities, values: filtering.activities.values.concat(e.target.value) }  })
-                handleFilter(filtering.active, filtering.continents, { ...filtering.activities, values: filtering.activities.values.concat(e.target.value) })              
-              }} 
-              name='activities'
-            >
-              <option value="">...</option>
-              {!!filteringData.activities.length ? (
-                filteringData.activities.map((data, index) => (
-                  <option key={index} value={data}>{data}</option>
-                ))
-              ) : (
-                <option value=''>No hay elementos.</option>
-              )}
             </Select>
           )}
         </div>

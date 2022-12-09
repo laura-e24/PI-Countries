@@ -24,10 +24,10 @@ function usePagination(data) {
 
   function jump(page) {
     const pageNumber = Math.max(1, page)
-    setCurrentPage((currentPage) => Math.min(pageNumber, pages));
+    setCurrentPage(Math.min(pageNumber, pages));
   }
 
-  return { next, prev, jump, currentData, currentPage, pages };
+  return { next, prev, jump, currentData, setCurrentPage, currentPage, pages };
 }
 
 export default usePagination;

@@ -26,9 +26,6 @@ const getCountries = async (req, res) => {
     if (await Country.count() === 0) {
       await Country.bulkCreate(countries);
     }
-
-    // Caso contrario (si ya había datos en la DB), solicitamos aquellas filas
-    // que queremos (todas o sólo las que matcheen con la query)
     const includeActivityModel = [{
       model: Activity,
       attributes: ["name","difficulty","duration","season"],
@@ -36,6 +33,8 @@ const getCountries = async (req, res) => {
         attributes: { exclude: ["createdAt", "updatedAt"]},
       }
     }]
+    // Caso contrario (si ya había datos en la DB), solicitamos aquellas filas
+    // que queremos (todas o sólo las que matcheen con la query)
     const reqCountries = name 
     ? await Country.findAll({ where: { name: { [Op.match]: name }}, include: includeActivityModel }) 
     : await Country.findAll({ include: includeActivityModel })
