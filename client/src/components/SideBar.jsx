@@ -92,7 +92,7 @@ const SideBar = ({ jump }) => {
       ? `/home?name=${search}`
       : '/home'
     );
-    jump(0)
+    jump(1)
     setSearch('')
   }
 
@@ -118,7 +118,7 @@ const SideBar = ({ jump }) => {
           </div>
         </form>
         <Menu>
-          <Link onClick={() => jump(0)} to='/home' style={{ textDecoration: 'none' }}>
+          <Link onClick={() => jump(1)} to='/home' style={{ textDecoration: 'none' }}>
             <MenuItem active={location.pathname.includes('home')}>🏠 Home</MenuItem>
           </Link>
           <Link to='/activities/create' style={{ textDecoration: 'none' }}>

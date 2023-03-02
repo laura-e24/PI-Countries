@@ -4,7 +4,7 @@ const getActivities = async (req, res) => {
   try {
     const activities = await Activity.findAll()
 
-    res.json({ activities })
+    res.status(200).json({ activities })
   } catch (error) {
     res.status(500).json({ message: error.message})
   }
@@ -29,7 +29,7 @@ const createActivity = async (req, res) => {
       })
     } else await Country.addActivity(newActivity);
 
-    res.json({ activity: newActivity })
+    res.status(201).json({ activity: newActivity })
   } catch (error) {
     console.log(error.message)
     if (!name || !difficulty || !duration || !season)
@@ -43,7 +43,43 @@ const createActivity = async (req, res) => {
   }
 }
 
+const deleteActivity = async (req, res) => {
+  const { id } = req.params
+  const { force } = req.query;
+
+  try {
+    await Activity.destroy({
+      where: {
+        id: id
+      },
+      force: force
+    });
+
+    res.status(200).json({ msg: force ? "Actividad eliminada exitosamente." : "Actividad desactivada exitosamente." })
+  } catch (error) {
+    console.log(error.message)
+    res.status(500).json({ message: error.message })
+  }
+}
+
+const restoreActivity = async (req, res) => {
+  const { id } = req.params
+
+  try {
+    await Activity.restore({
+      where: { id: id }
+    });
+
+    res.status(200).json({ msg: "Actividad restaurada exitosamente." })
+  } catch (error) {
+    console.log(error.message)
+    res.status(500).json({ message: error.message })
+  }
+}
+
 module.exports = {
   createActivity,
-  getActivities
+  getActivities,
+  deleteActivity,
+  restoreActivity
 };

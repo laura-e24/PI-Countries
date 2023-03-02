@@ -2,9 +2,7 @@ const { Country, Activity } = require('../db.js')
 const axios = require('axios')
 const { Op } = require("sequelize");
 
-const getCountries = async (req, res) => {
-  const { name } = req.query;
-
+const fetchCountries = async () => {
   try {
     const response = await axios('https://restcountries.com/v3/all')
     const countries = response.data.map(c => {
@@ -19,11 +17,21 @@ const getCountries = async (req, res) => {
         subregion: c.subregion  
       }
     })
+    return countries;
+  } catch (error) {
+    throw new Error(error)
+  }
+}
 
-     // En el primer llamado a la API la DB está vacía, por
+const getCountries = async (req, res) => {
+  const { name } = req.query;
+
+  try {
+    // En el primer llamado a la API la DB está vacía, por
     // lo cual chequeamos si la misma tiene datos o no,
     // y en consecuencia determinamos si debemos crear nuevos o no
     if (await Country.count() === 0) {
+      const countries = await fetchCountries()
       await Country.bulkCreate(countries);
     }
     const includeActivityModel = [{
@@ -40,7 +48,7 @@ const getCountries = async (req, res) => {
     : await Country.findAll({ include: includeActivityModel })
 
     // Devolvemos ese resultado condicional
-    res.json({ countries: reqCountries })
+    res.status(200).json({ countries: reqCountries })
     // else res.status(404).json({ message: `No se encontraron resultados para "${name}"` })
   } catch (error) {
     res.status(500).json({ message:  error.message })
