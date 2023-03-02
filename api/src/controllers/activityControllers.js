@@ -45,8 +45,6 @@ const createActivity = async (req, res) => {
       difficulty,
       duration,
       season
-    }, {
-      attributes: { exclude: [ "createdAt", "deletedAt", "updatedAt" ] }
     });
 
     if (countries && countries.length) {
@@ -80,7 +78,7 @@ const deleteActivity = async (req, res) => {
       force: !!force
     })
 
-    res.status(200).json({ msg: "Actividad eliminada exitosamente." })
+    res.status(200).json({ msg: !!force ? "Actividad eliminada exitosamente." : "Actividad deshabilitada exitosamente." })
   } catch (error) {
     console.log(error.message)
     res.status(500).json({ message: error.message })

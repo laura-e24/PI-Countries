@@ -55,36 +55,19 @@ const getCountries = async (req, res) => {
 }
 
 const getOneCountry = async (req, res) => {
-
   const { countryId } = req.params;
 
   try {
-    const data = await Country.findOne({
-      where: {
-        id: countryId
-      },
+    const country = await Country.findByPk(countryId, {
       include: [{
         model: Activity,
-        attributes: ["name","difficulty","duration","season"],
-        through: {
-          attributes: { exclude: ["createdAt", "updatedAt"] },
-        },
+        attributes: { exclude: [ "createdAt", "deletedAt", "updatedAt" ] },
+        through: { attributes: [] },
         as: "activities"
-      }],
+      }]
     });
-
-    const country = {
-      id: data[0].id,
-      name: data[0].name,
-      imgFlag: data[0].imgFlag,
-      continent: data[0].continent,
-      capital: data[0].capital,
-      subregion: data[0].subregion,
-      area: data[0].area,
-      population: data[0].population,
-      activities: data[0].Activities
-    }
-    res.status(200).json({ country })
+  
+    res.status(200).json(country)
   } catch (error) {
     res.status(500).json({ mesage: error.message })
   }
