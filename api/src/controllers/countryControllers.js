@@ -36,10 +36,9 @@ const getCountries = async (req, res) => {
     }
     const includeActivityModel = [{
       model: Activity,
-      attributes: ["name","difficulty","duration","season"],
-      through: {
-        attributes: { exclude: ["createdAt", "updatedAt"]},
-      }
+      through: { attributes: [] },
+      as: "activities",
+      attributes: { exclude: ["deletedAt", "updatedAt", "createdAt"] }
     }]
     // Caso contrario (si ya había datos en la DB), solicitamos aquellas filas
     // que queremos (todas o sólo las que matcheen con la query)
@@ -60,7 +59,7 @@ const getOneCountry = async (req, res) => {
   const { countryId } = req.params;
 
   try {
-    const data = await Country.findAll({
+    const data = await Country.findOne({
       where: {
         id: countryId
       },
@@ -69,7 +68,8 @@ const getOneCountry = async (req, res) => {
         attributes: ["name","difficulty","duration","season"],
         through: {
           attributes: { exclude: ["createdAt", "updatedAt"] },
-        }
+        },
+        as: "activities"
       }],
     });
 
@@ -84,7 +84,7 @@ const getOneCountry = async (req, res) => {
       population: data[0].population,
       activities: data[0].Activities
     }
-    res.json({ country })
+    res.status(200).json({ country })
   } catch (error) {
     res.status(500).json({ mesage: error.message })
   }
