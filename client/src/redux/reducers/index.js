@@ -1,12 +1,13 @@
 import { sortArr } from "../../utils";
-import { GET_COUNTRIES, GET_COUNTRY, GET_ACTIVITIES, CREATE_ACTIVITY, CLEAN_UP, SORT_COUNTRIES, FILTER_COUNTRIES } from "../types";
+import { GET_COUNTRIES, GET_COUNTRY, GET_ACTIVITIES, CREATE_ACTIVITY, CLEAN_UP, SORT_COUNTRIES, FILTER_COUNTRIES, REMOVE_ACTIVITY, UPDATE_ACTIVITY, RESTORE_ACTIVITY, GET_ACTIVITY, DELETE_ACTIVITY, DISABLE_ACTIVITY } from "../types";
 
 
 const initialState = {
   filteredCountries: [],
   countries: [],
   country: {},
-  activities: []
+  activities: [],
+  activity: {}
 };
 
 export default (state = initialState, action) => {
@@ -17,16 +18,7 @@ export default (state = initialState, action) => {
       return {...state, countries: action.payload.countries, filteredCountries: action.payload.countries}
 
     case GET_COUNTRY:
-      return {...state, country: { ...state.country, ...action.payload.country }}
-
-    case GET_ACTIVITIES:
-      return {...state, activities: state.activities.concat(action.payload.activities)}
-
-    case CREATE_ACTIVITY:
-      return {...state, activities: state.activities.concat(action.payload.activity)}
-
-    case CLEAN_UP:
-      return {...state, country: {}}
+      return {...state, country: action.payload}
 
     case FILTER_COUNTRIES:
       const filterByAct = (country) => {
@@ -54,6 +46,51 @@ export default (state = initialState, action) => {
 
       return {...state, countries: newArr}
         
+    case GET_ACTIVITIES:
+      return {...state, activities: action.payload.activities }
+
+    case GET_ACTIVITY:
+      return {...state, activity: action.payload}
+
+    case CREATE_ACTIVITY:
+      return {...state, activities: state.activities.concat(action.payload.activity)}
+
+    case DELETE_ACTIVITY:
+      return {...state, activities: state.activities.filter(act => act.id !== action.payload)}
+
+    case DISABLE_ACTIVITY:
+      return {...state, activities: state.activities.map(act => {
+        if (act.id === action.payload) {
+          return {
+            ...act,
+            ...action.payload
+          }
+        } else return act
+      })}
+
+    case RESTORE_ACTIVITY:
+      return {...state, activities: state.activities.map(act => {
+        if (act.id === action.payload) {
+          return {
+            ...act,
+            ...action.payload
+          }
+        } else return act
+      })}
+
+    case UPDATE_ACTIVITY:
+      return {...state, activities: state.activities.map(act => {
+        if (act.id === action.payload.id) {
+          return {
+            ...act,
+            ...action.payload
+          }
+        } else return act
+      })}
+
+    case CLEAN_UP:
+      return {...state, country: {}}
+
     default:
       return state;
   }

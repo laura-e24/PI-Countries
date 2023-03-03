@@ -21,6 +21,10 @@ label {
   margin-bottom: 0 !important;
 }
 
+a {
+  text-decoration: none;
+}
+
 .m-auto {
   margin: auto;
 }
@@ -43,8 +47,44 @@ label {
   display: flex;
 }
 
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
 .justify-center {
   justify-content: center;
+}
+
+.justify-end {
+  justify-content: end;
+}
+
+.justify-around {
+  justify-content: space-around;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.fill-current {
+  fill: currentColor;
+}
+
+.space-x-2 > * + * { 
+  margin-left: 0.5rem; /* 8px */
+}
+
+.space-x-4 > * + * { 
+  margin-left: 1rem; /* 16px */
+}
+
+.space-y-4 > * + * { 
+  margin-bottom: 1rem; /* 16px */
 }
 
 .animation-pulse {

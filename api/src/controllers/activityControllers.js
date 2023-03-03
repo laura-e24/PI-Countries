@@ -8,7 +8,8 @@ const getActivities = async (req, res) => {
         through: { attributes: [] },
         as: "countries"
       },
-      attributes: { exclude: [ "createdAt", "deletedAt", "updatedAt" ] }
+      attributes: { exclude: [ "createdAt", "updatedAt" ] },
+      paranoid: false
     })
     res.status(200).json({ activities })
   } catch (error) {
@@ -30,7 +31,7 @@ const getOneActivity = async (req, res) => {
       attributes: { exclude: [ "createdAt", "deletedAt", "updatedAt" ] }
     });
 
-    res.status(200).json({ activity })
+    res.status(200).json(activity)
   } catch (error) {
     res.status(500).json({ mesage: error.message })
   }

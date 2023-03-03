@@ -1,6 +1,5 @@
 import axios from "axios";
-import { sortArr } from "../../utils";
-import { GET_COUNTRIES, GET_COUNTRY, GET_ACTIVITIES, CREATE_ACTIVITY, CLEAN_UP, SORT_COUNTRIES, FILTER_COUNTRIES } from "../types";
+import { GET_COUNTRIES, GET_COUNTRY, GET_ACTIVITIES, CREATE_ACTIVITY, CLEAN_UP, SORT_COUNTRIES, FILTER_COUNTRIES, RESTORE_ACTIVITY, GET_ACTIVITY, REMOVE_ACTIVITY, UPDATE_ACTIVITY, DELETE_ACTIVITY, DISABLE_ACTIVITY } from "../types";
 
 export const getCountries = (name = undefined) => {
   return async (dispatch) => {
@@ -21,11 +20,31 @@ export const getOneCountry = (countryId) => {
   }
 }
 
+export const sortCountries = (payload) => {
+  return async (dispatch) => {
+    return dispatch({ type: SORT_COUNTRIES, payload })
+  }
+}
+
+export const filterCountries = (payload) => {
+  return async (dispatch) => {
+    return dispatch({ type: FILTER_COUNTRIES, payload })
+  }
+}
+
 export const getActivities = () => {
   return async (dispatch) => {
     const response = await axios(`/activities`)
 
     return dispatch({ type: GET_ACTIVITIES, payload: response.data })
+  }
+}
+
+export const getOneActivity = (activityId) => {
+  return async (dispatch) => {
+    const response = await axios(`/activities/${activityId}`)
+  
+    return dispatch({ type: GET_ACTIVITY, payload: response.data })
   }
 }
 
@@ -37,20 +56,40 @@ export const createActivity = (activity) => {
   }
 }
 
+export const deleteActivity = (activityId) => {
+  return async (dispatch) => {
+    await axios.delete(`/activities/${activityId}?force=true`)
+
+    return dispatch({ type: DELETE_ACTIVITY, payload: activityId })
+  }
+}
+
+export const disableActivity = (activityId) => {
+  return async (dispatch) => {
+    await axios.delete(`/activities/${activityId}`)
+
+    return dispatch({ type: DISABLE_ACTIVITY, payload: activityId })
+  }
+}
+
+export const restoreActivity = (activityId) => {
+  return async (dispatch) => {
+    await axios.post(`/activities/${activityId}`, {})
+  
+    return dispatch({ type: RESTORE_ACTIVITY, payload: activityId })
+  }
+}
+
+export const updateActivity = (activity) => {
+  return async (dispatch) => {
+    const response = await axios.patch(`/activities/${activity.id}`, activity)
+  
+    return dispatch({ type: UPDATE_ACTIVITY, payload: response.data })
+  }
+}
+
 export const cleanUpState = () => {
   return async (dispatch) => {
     return dispatch({ type: CLEAN_UP, payload: {} })
-  }
-}
-
-export const sortCountries = (payload) => {
-  return async (dispatch) => {
-    return dispatch({ type: SORT_COUNTRIES, payload })
-  }
-}
-
-export const filterCountries = (payload) => {
-  return async (dispatch) => {
-    return dispatch({ type: FILTER_COUNTRIES, payload })
   }
 }

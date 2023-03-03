@@ -32,7 +32,7 @@ const Home = () => {
       await dispatch(getCountries(name))
       if (!name) setIsLoading(false)
 
-      await dispatch(getActivities())
+      // await dispatch(getActivities())
     }
     fetchData()
   }, [name, dispatch])

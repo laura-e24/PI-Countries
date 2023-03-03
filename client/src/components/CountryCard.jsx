@@ -8,6 +8,7 @@ const Img = styled.img`
   display: block;
   margin-left: auto;
   margin-right: auto;
+  border-radius: 6px;
 `
 
 const H3 = styled.h3`

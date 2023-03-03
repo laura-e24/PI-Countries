@@ -121,8 +121,8 @@ const SideBar = ({ jump }) => {
           <Link onClick={() => jump(1)} to='/home' style={{ textDecoration: 'none' }}>
             <MenuItem active={location.pathname.includes('home')}>🏠 Home</MenuItem>
           </Link>
-          <Link to='/activities/create' style={{ textDecoration: 'none' }}>
-            <MenuItem active={location.pathname.includes('activities')}>📝 Crear actividad</MenuItem>
+          <Link to='/activities' style={{ textDecoration: 'none' }}>
+            <MenuItem active={location.pathname.includes('activities')}>📝 Actividades turísticas</MenuItem>
           </Link>
         </Menu>
       </SideBarComponent>
