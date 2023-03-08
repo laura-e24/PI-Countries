@@ -89,7 +89,8 @@ const Home = () => {
     continents: continents,
     activities: activitiesNames
   }
-
+console.log(countries)
+  console.log(activities)
   return (  
     <Layout 
       next={next}
