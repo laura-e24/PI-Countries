@@ -16,6 +16,9 @@ dependencies:
   axios:
     specifier: ^1.1.3
     version: 1.1.3
+  eslint-config-react-app:
+    specifier: ^7.0.1
+    version: 7.0.1(@babel/plugin-syntax-flow@7.21.4)(@babel/plugin-transform-react-jsx@7.21.5)(eslint@8.40.0)(jest@27.5.1)(typescript@5.0.4)
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
