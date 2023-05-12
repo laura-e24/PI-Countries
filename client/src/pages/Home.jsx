@@ -10,32 +10,32 @@ import { filterCountries, getActivities, getCountries, sortCountries } from '../
 import HomeSkeleton from '../components/HomeSkeleton';
 import Layout from '../layouts/Layout';
 import CardsContainer from '../components/CardsContainer';
+import { fetchAllCountries, filterCountriesByActivity, filterCountriesByContinent, selectAllCountries, selectAllCountriesStatus } from '../features/countries/countriesSlice';
+import { selectAllActivities, selectAllActivitiesStatus } from '../features/activities/activitiesSlice';
+import { EStateGeneric } from '../redux/types';
 
 const Home = () => {
-
   const dispatch  = useDispatch();
   const [searchParams] = useSearchParams();
   const name = searchParams.get('name');
   const location = useLocation()
 
-  const countries = useSelector((state) => state.countries);
-  const activities = useSelector((state) => state.activities);
-
-  const [isLoading, setIsLoading] = useState(false)
+  const countries = useSelector(selectAllCountries);
+  const countriesStatus = useSelector(selectAllCountriesStatus);
+  const activities = useSelector(selectAllActivities);
 
   const { next, prev, jump, currentData, currentPage, pages } = usePagination(countries)
   const sliceCountries = currentData()
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!name) setIsLoading(true)
-      await dispatch(getCountries(name))
-      if (!name) setIsLoading(false)
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     if (countriesStatus === EStateGeneric.IDLE) {
 
-      // await dispatch(getActivities())
-    }
-    fetchData()
-  }, [name, dispatch])
+  //       await dispatch(fetchAllCountries());
+  //     }
+  //   }
+  //   fetchData()
+  // }, [name, dispatch, countriesStatus])
 
   const [sorting, setSorting] = useState({
     active: false,
@@ -45,14 +45,9 @@ const Home = () => {
 
   const [filtering, setFiltering] = useState({
     active: false,
-    activities: {
-      active: false,
-      values: []
-    },
-    continents: {
-      active: false,
-      values: []
-    },
+    filterBy: [],
+    activities: { values: [] },
+    continents: { values: [] }
   })
 
   const handleSort = (active, by, order) => {
@@ -64,14 +59,16 @@ const Home = () => {
     dispatch(sortCountries(payload))
   }
 
-  const handleFilter = (active, ...other) => {
-    const [continents, activities] = other
+  const handleFilter = ({ continents, activities, filterBy, active }) => {
+
     const payload = {
       active,
+      filterBy,
       continents,
       activities,
     }
-    dispatch(filterCountries(payload))
+    if (filterBy.includes("activity")) dispatch(filterCountriesByActivity(payload.activities))
+    if (filterBy.includes("continent")) dispatch(filterCountriesByContinent(payload.continents))
   }
 
   const continents = [
@@ -89,8 +86,7 @@ const Home = () => {
     continents: continents,
     activities: activitiesNames
   }
-console.log(countries)
-  console.log(activities)
+
   return (  
     <Layout 
       next={next}
@@ -107,10 +103,10 @@ console.log(countries)
         setSorting={setSorting}
         setFiltering={setFiltering}
         filteringData={filteringData}
-        handleSort={handleSort}
+        handleSort={{}}
         handleFilter={handleFilter}
       />
-      {!isLoading ? (
+      {countriesStatus === EStateGeneric.SUCCEEDED ? (
         !!sliceCountries.length ? (
           <CardsContainer>
             {sliceCountries.map((country, i) => {

@@ -79,7 +79,14 @@ const deleteActivity = async (req, res) => {
       force: !!force
     })
 
-    res.status(200).json({ msg: !!force ? "Actividad eliminada exitosamente." : "Actividad deshabilitada exitosamente." })
+    const newData = await Activity.findAll({ paranoid: false });
+
+    res.status(200).json({ 
+      msg: !!force 
+      ? "Actividad eliminada exitosamente." 
+      : "Actividad deshabilitada exitosamente.", 
+      data: newData 
+    })
   } catch (error) {
     console.log(error.message)
     res.status(500).json({ message: error.message })
@@ -94,7 +101,12 @@ const restoreActivity = async (req, res) => {
       where: { id: activityId }
     });
 
-    res.status(200).json({ msg: "Actividad restaurada exitosamente." })
+    const newData = await Activity.findAll({ paranoid: false });
+
+    res.status(200).json({ 
+      msg: "Actividad restaurada exitosamente.",
+      data: newData
+    })
   } catch (error) {
     console.log(error.message)
     res.status(500).json({ message: error.message })

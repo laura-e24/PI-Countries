@@ -94,14 +94,14 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
                 filtering.active 
                 ? { 
                   active: false, 
-                  continents: { active: false, values: [] }, 
-                  activities: { active: false, values: [] } 
+                  filterBy: [],
+                  continents: { values: [] }, 
+                  activities: { values: [] } 
                 }
                 : { ...filtering, active: true }
               )
 
-              if (filtering.active) 
-                handleFilter(false, { active: false, values: [] }, { active: false, values: [] })
+              // handleFilter(filtering.active, { filterBy }, { values: [] }, { values: [] })
             }}
           >
             Filtrar
@@ -111,35 +111,31 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
               onChange={(e) => {
                 setFiltering({ 
                   ...filtering, 
-                  [e.target.value]: { active: true, values: [] } 
+                  filterBy: filtering.filterBy.concat(e.target.value)
+                  // [e.target.value]: { active: true, values: [] } 
                 })
-
-                if (!!filtering[e.target.value]?.values.length) 
-                  handleFilter(filtering.active, filtering.continents, filtering.activities)
+                // if (!!filtering[e.target.value]?.values.length) 
+                //   handleFilter(filtering.active, filtering.continents, filtering.activities)
               }} 
               name="filterBy"
             >
               <option value="">...</option>
-              <option value="continents">Continente</option>
-              <option value="activities">Actividad turística</option>
+              <option value="continent">Continente</option>
+              <option value="activity">Actividad turística</option>
             </Select>
           )}
-          {filtering.active && filtering.continents?.active && (
+          {filtering.active && filtering.filterBy.includes("continent") && (
             <Select 
               onChange={async (e) => {
                 setFiltering({ 
                   ...filtering, 
-                  continents: { 
-                    ...filtering.continents, 
-                    values: filtering.continents.values.concat(e.target.value) 
-                  }  
+                  continents: { values: filtering.continents.values.concat(e.target.value) }  
                 })
-
-                await handleFilter(
-                  filtering.active, 
-                  { ...filtering.continents, values: filtering.continents.values.concat(e.target.value) }, 
-                  filtering.activities
-                )
+                
+                handleFilter({
+                  ...filtering,
+                  continents: { values: filtering.continents.values.concat(e.target.value) }
+                })
               }} 
               name='continents'
             >
@@ -153,21 +149,18 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
               )}
             </Select>
           )}
-          {filtering.active && filtering.activities?.active && (
+          {filtering.active && filtering.filterBy.includes("activity") && (
             <Select 
               onChange={(e) => {
                 setFiltering({ 
                   ...filtering, 
-                  activities: { 
-                    ...filtering.activities, 
-                    values: filtering.activities.values.concat(e.target.value) 
-                  }  
+                  activities: { values: filtering.activities.values.concat(e.target.value) }  
                 })
-                handleFilter(
-                  filtering.active, 
-                  filtering.continents, 
-                  { ...filtering.activities, values: filtering.activities.values.concat(e.target.value) }
-                )
+
+                handleFilter({ 
+                  ...filtering, 
+                  activities: { values: filtering.activities.values.concat(e.target.value) }  
+                })
               }} 
               name='activities'
             >

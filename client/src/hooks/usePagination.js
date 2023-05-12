@@ -8,7 +8,7 @@ function usePagination(data) {
 
   
   function currentData() {
-    const begin = (currentPage) * PAGE_LIMIT;
+    const begin = (currentPage - 1) * PAGE_LIMIT;
     const end = begin + PAGE_LIMIT;
     return data.slice(begin, end);
   }
@@ -23,7 +23,7 @@ function usePagination(data) {
 
   function jump(page) {
     const pageNumber = Math.max(1, page)
-    setCurrentPage(Math.min(pageNumber, pages));
+    setCurrentPage((currentPage) => Math.min(pageNumber, pages));
   }
 
   return { next, prev, jump, currentData, setCurrentPage, currentPage, pages };

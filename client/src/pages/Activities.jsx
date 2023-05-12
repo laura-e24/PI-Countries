@@ -1,12 +1,13 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from "react-redux";
-import { cleanUpState, deleteActivity, disableActivity, getActivities, getOneCountry, removeActivity, restoreActivity } from '../redux/actions';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import NoResults from '../components/NoResults';
 import CountrySkeleton from '../components/CountrySkeleton';
 import Layout from '../layouts/Layout';
 import FAIcon from '../components/FAIcon';
+import { deleteActivity, disableActivity, fetchAllActivities, restoreActivity, selectAllActivities, selectAllActivitiesStatus, selectOneActivityStatus } from '../features/activities/activitiesSlice';
+import { EStateGeneric } from '../redux/types';
 
 const CardsContainer = styled.div`
   justify-content: center;
@@ -89,27 +90,20 @@ const CreateButton = styled.a`
 
 const Activities = () => {
   const dispatch  = useDispatch();
-  const activities = useSelector((state) => state.activities);
-  const [isLoading, setIsLoading] = useState(false)
+  const activities = useSelector(selectAllActivities);
+  const activitiesStatus = useSelector(selectAllActivitiesStatus);
+  const oneActivityStatus = useSelector(selectOneActivityStatus);
+
   let navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchData = async () => {
-     setIsLoading(true)
-      await dispatch(getActivities())
-      setIsLoading(false)
-    }
-    fetchData()
-  }, [dispatch])
-
-  function useForceUpdate(){
-    const [activitiesCopy, setActivitiesCopy] = useState(activities); // integer state
-    return () => setActivitiesCopy(activity => activities); // update state to force render
-    // A function that increment 👆🏻 the previous state like here 
-    // is better than directly setting `setValue(value + 1)`
-  }
-  
-  const forceUpdate = useForceUpdate()
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     if (activitiesStatus === EStateGeneric.IDLE) {
+  //       await dispatch(fetchAllActivities());
+  //     }
+  //   }
+  //   fetchData()
+  // }, [dispatch, activitiesStatus])
 
   return (  
     <>
@@ -133,7 +127,7 @@ const Activities = () => {
         `}
       </style>
       <Layout>
-      {!isLoading ? (
+      {activitiesStatus !== EStateGeneric.PENDING ? (
         <>
         <CardsContainer>
           <div className='my-2'>
@@ -146,7 +140,7 @@ const Activities = () => {
                {!!act.deletedAt ? (
                <>
                <Button
-                  onClick={() => dispatch(restoreActivity(act.id))}
+                  onClick={() => dispatch(restoreActivity(act))}
                   btnType="restore" 
                   type='button'
                 >
@@ -160,10 +154,7 @@ const Activities = () => {
                ) : (
                 <>
                 <Button
-                  onClick={async () => {
-                    await dispatch(disableActivity(act.id))
-                    forceUpdate()
-                  }}
+                  onClick={() => dispatch(disableActivity(act.id))}
                   btnType="disable" 
                   type='button'
                 >

@@ -13,3 +13,10 @@ export const RESTORE_ACTIVITY = 'RESTORE_ACTIVITY';
 export const UPDATE_ACTIVITY = 'UPDATE_ACTIVITY';
 
 export const CLEAN_UP = 'CLEAN_UP';
+
+export const EStateGeneric = {
+  IDLE: "idle",
+  SUCCEEDED: "succeeded",
+  PENDING: "pending",
+  FAILED: "failed",
+}

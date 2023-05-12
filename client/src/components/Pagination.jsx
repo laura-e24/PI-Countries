@@ -56,7 +56,7 @@ const Pagination = ({next, prev, jump, currentPage, pages }) => {
             <PageNumber 
               currentPage={currentPage === index + 1}
               key={index} 
-              onClick={() => jump(index+1)}
+              onClick={() => jump(index + 1)}
             >
               {index + 1}
             </PageNumber>

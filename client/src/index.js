@@ -5,10 +5,15 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from "react-router-dom"
 import { Provider } from "react-redux";
-import store from "./redux/store/index.js";
+import store from "./redux/store/index";
 import axios from 'axios';
+import { fetchAllCountries } from './features/countries/countriesSlice';
+import { fetchAllActivities } from './features/activities/activitiesSlice';
 
 axios.defaults.baseURL = process.env.REACT_APP_API || 'http://localhost:3001'
+
+store.dispatch(fetchAllCountries())
+store.dispatch(fetchAllActivities())
 
 ReactDOM.render(
   <React.StrictMode>

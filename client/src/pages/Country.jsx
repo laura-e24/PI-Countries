@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import NoResults from '../components/NoResults';
 import CountrySkeleton from '../components/CountrySkeleton';
 import Layout from '../layouts/Layout';
+import { fetchOneCountry, selectOneCountry, selectOneCountryStatus } from '../features/countries/countriesSlice';
+import { EStateGeneric } from '../redux/types';
 
 const CardsContainer = styled.div`
   justify-content: center;
@@ -48,7 +50,8 @@ const Td = styled.td`
 const Country = () => {
 
   const dispatch  = useDispatch();
-  const country = useSelector((state) => state.country);
+  const country = useSelector(selectOneCountry);
+  const countryStatus = useSelector(selectOneCountryStatus);
   const params = useParams();
   const { countryId } = params;
   
@@ -56,13 +59,13 @@ const Country = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setIsLoading(true)
-      await dispatch(getOneCountry(countryId))
-      setIsLoading(false)
+      if (countryStatus === EStateGeneric.IDLE) {
+        await dispatch(fetchOneCountry(countryId));
+      }
     }
     fetchData()
     return () => dispatch(cleanUpState())
-  }, [countryId, dispatch])
+  }, [countryId, dispatch, countryStatus])
 
   return (  
     <>
@@ -82,7 +85,7 @@ const Country = () => {
         `}
       </style>
       <Layout>
-        {!isLoading ? (
+        {countryStatus === EStateGeneric.SUCCEEDED ? (
           <>
           <H2>{country.name} &nbsp;<span id='spanId'>({countryId})</span></H2>
           <CardsContainer>

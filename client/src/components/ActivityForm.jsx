@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { createActivity, getCountries, getOneActivity, updateActivity } from "../redux/actions";
+// import { createActivity, getCountries, getOneActivity, updateActivity } from "../redux/actions";
 import { capitalize, sortArr } from "../utils";
 import CustomInput from "./CustomInput";
 import CustomSelect from "./CustomSelect";
 import { ButtonComponent } from '../components/GenericButton';
 import { useParams } from "react-router-dom";
 import * as _ from "lodash";
+import { createActivity, fetchOneActivity, selectOneActivity, selectOneActivityStatus, updateActivity } from "../features/activities/activitiesSlice";
+import { fetchAllCountries, selectAllCountries, selectAllCountriesStatus } from "../features/countries/countriesSlice";
+import { EStateGeneric } from "../redux/types";
 
 const Button = styled(ButtonComponent)`
   margin-top: 20px;
@@ -49,8 +52,10 @@ const Form = styled.form`
 const ActivityForm = ({ setToastify, type = "create" }) => {
 
   const dispatch  = useDispatch();
-  const countries = useSelector((state) => state.countries);
-  const activity = useSelector((state) => state.activity);
+  const countries = useSelector(selectAllCountries);
+  const countriesStatus = useSelector(selectAllCountriesStatus);
+  const activity = useSelector(selectOneActivity);
+  const activityStatus = useSelector(selectOneActivityStatus);
   const params = useParams();
   const { activityId } = params;
 
@@ -64,13 +69,17 @@ const ActivityForm = ({ setToastify, type = "create" }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      await dispatch(getCountries())
-      if (type === "edit") {
-        await dispatch(getOneActivity(activityId))
+      if (countriesStatus === EStateGeneric.IDLE) {
+        await dispatch(fetchAllCountries());
+      }
+      if (activityStatus === EStateGeneric.IDLE) {
+        if (type === "edit") {
+          await dispatch(fetchOneActivity(activityId));
+        }
       }
     }
     fetchData()
-  }, [dispatch, activityId])
+  }, [dispatch, activityId, countriesStatus, activityStatus])
 
   useEffect(() => {
     if (type === "edit") {
@@ -161,7 +170,7 @@ const ActivityForm = ({ setToastify, type = "create" }) => {
       countries: values.countries.filter(c => c.id !== id)
     })
   }
-console.log(values)
+console.log(activity)
   return (  
     <>
      <style>
@@ -247,7 +256,7 @@ console.log(values)
           }}
         >
           <option value="">Seleccionar...</option>
-          {sortArr(countries, 'asc', 'name').map((country) => (
+          {countries.map((country) => (
             <option key={country.id} value={country.id}>{country.name}</option>
           ))}
         </CustomSelect>
