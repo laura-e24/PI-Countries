@@ -10,7 +10,7 @@ import { filterCountries, getActivities, getCountries, sortCountries } from '../
 import HomeSkeleton from '../components/HomeSkeleton';
 import Layout from '../layouts/Layout';
 import CardsContainer from '../components/CardsContainer';
-import { fetchAllCountries, filterCountriesByActivity, filterCountriesByContinent, selectAllCountries, selectAllCountriesStatus } from '../features/countries/countriesSlice';
+import { fetchAllCountries, filterCountriesByActivity, filterCountriesByContinent, selectAllCountries, selectAllCountriesStatus, sortCountriesByName, sortCountriesByPopulation } from '../features/countries/countriesSlice';
 import { selectAllActivities, selectAllActivitiesStatus } from '../features/activities/activitiesSlice';
 import { EStateGeneric } from '../redux/types';
 
@@ -50,19 +50,21 @@ const Home = () => {
     continents: { values: [] }
   })
 
-  const handleSort = (active, by, order) => {
+  const handleSort = (by, order) => {
     const payload = {
-      active,
       by,
       order
     }
-    dispatch(sortCountries(payload))
+
+    if (by === "name")
+      dispatch(sortCountriesByName(payload.order))
+    else
+      dispatch(sortCountriesByPopulation(payload.order))
   }
 
-  const handleFilter = ({ continents, activities, filterBy, active }) => {
+  const handleFilter = ({ continents, activities, filterBy }) => {
 
     const payload = {
-      active,
       filterBy,
       continents,
       activities,
@@ -103,7 +105,7 @@ const Home = () => {
         setSorting={setSorting}
         setFiltering={setFiltering}
         filteringData={filteringData}
-        handleSort={{}}
+        handleSort={handleSort}
         handleFilter={handleFilter}
       />
       {countriesStatus === EStateGeneric.SUCCEEDED ? (

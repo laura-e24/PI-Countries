@@ -181,7 +181,6 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
                 ? { active: false, by: '', order: '' }
                 : { ...sorting, active: true }
               )
-              if (sorting.active) handleSort(false, '', '')
             }}
           >
             Ordenar
@@ -191,7 +190,6 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
               name="orderBy" 
               onChange={e =>  {
                 setSorting({ ...sorting, by: e.target.value})
-                if (sorting.by) handleSort(sorting.active, e.target.value, sorting.order)
               }}
             >
               <option value="">...</option>
@@ -203,7 +201,7 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
             <Select 
               onChange={e => {
                 setSorting({ ...sorting, order: e.target.value })
-                handleSort(sorting.active, sorting.by, e.target.value)
+                handleSort(sorting.by, e.target.value)
               }} 
               name="orderAs"
             >

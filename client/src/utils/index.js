@@ -16,4 +16,13 @@ export const sortArr = (array, order, key) => {
   })
 }
 
+export const filterByActFn = (country, values) => {
+  const activitiesNames = country.activities.map(a => a.name);
+  return activitiesNames.some(v => values.includes(v))
+}
+
+export const filterByContFn = (country, values) => {
+  return values.some(v => v === country.continent)
+}
+
 export const capitalize = string => string.charAt(0).toUpperCase() + string.slice(1);
