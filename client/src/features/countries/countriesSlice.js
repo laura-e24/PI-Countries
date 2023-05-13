@@ -55,33 +55,37 @@ const countriesSlice = createSlice({
     //   state.countries = [];
     // },
     filterCountriesByContinent: (state, action) => {
-      let { active, filterBy, continents: { values }, activities } = state.filtering;
+      let { activities } = state.filtering;
       let { by, order } = state.sorting;
 
       state.filtering.active = true;
       state.filtering.filterBy = state.filtering.filterBy.concat("continent");
       state.filtering.continents.values = action.payload.values;
 
-      let countriesToFilter 
-      
-      
-      if (action.payload.values.length > 1) {
-        if (state.sorting.active) countriesToFilter = sortArr(state.originalCountries, order, by) 
-        else {
-          if (state.filtering.filterBy.includes("activity")) {
-            countriesToFilter = state.originalCountries.filter(country => filterByActFn(country, activities.values))
-          } else countriesToFilter = state.originalCountries
-        }
-      } else {
-        countriesToFilter = state.countries;
-      }   
+      let countriesToFilter  
+
+      if (state.filtering.filterBy.includes("continent") && state.filtering.filterBy.includes("activity")) {
+        countriesToFilter = state.originalCountries.filter(country => filterByActFn(country, activities.values))
+      }
+      else if (!state.filtering.filterBy.includes("continent") && state.filtering.filterBy.includes("activity")) {
+        countriesToFilter = state.countries
+      }
+      else if (state.filtering.filterBy.includes("continent") && !state.filtering.filterBy.includes("activity")) {
+        countriesToFilter = state.originalCountries
+      }
+      else if (!state.filtering.filterBy.includes("continent") && !state.filtering.filterBy.includes("activity")) {
+        countriesToFilter = state.countries
+      }
+
+      if (state.sorting.active) countriesToFilter = sortArr(countriesToFilter, order, by) 
+
 
       state.countries = countriesToFilter.filter(country => filterByContFn(country, action.payload.values))
     },
 
     filterCountriesByActivity: (state, action) => {
       let { by, order } = state.sorting;
-      let { active, filterBy, activities: { values }, continents} = state.filtering;
+      let { continents } = state.filtering;
       
       state.filtering.active = true;
       state.filtering.filterBy = state.filtering.filterBy.concat("activity");
@@ -89,30 +93,25 @@ const countriesSlice = createSlice({
 
       let countriesToFilter = [];
 
-      if (action.payload.values.length > 1) {
-        if (state.sorting.active) {
-          if (state.filtering.filterBy.includes("continent")) {
-            const filteredByCont = state.originalCountries.filter(country => filterByContFn(country, continents.values))
-            countriesToFilter = sortArr(filteredByCont, order, by) 
-          }
-          else countriesToFilter = sortArr(state.originalCountries, order, by) 
-        }
-        else {
-          if (state.filtering.filterBy.includes("continent")) {
-            countriesToFilter = state.originalCountries.filter(country => filterByContFn(country, continents.values))
-          } else countriesToFilter = state.originalCountries
-        }
-      } 
-      else {
-        countriesToFilter = state.countries;
-      }   
+      if (state.filtering.filterBy.includes("continent") && state.filtering.filterBy.includes("activity")) {
+        countriesToFilter = state.originalCountries.filter(country => filterByContFn(country, continents.values))
+      }
+      else if (!state.filtering.filterBy.includes("continent") && state.filtering.filterBy.includes("activity")) {
+        countriesToFilter = state.originalCountries
+      }
+      else if (state.filtering.filterBy.includes("continent") && !state.filtering.filterBy.includes("activity")) {
+        countriesToFilter = state.countries
+      }
+      else if (!state.filtering.filterBy.includes("continent") && !state.filtering.filterBy.includes("activity")) {
+        countriesToFilter = state.countries
+      }
+
+      if (state.sorting.active) countriesToFilter = sortArr(countriesToFilter, order, by)   
 
       state.countries = countriesToFilter.filter(country => filterByActFn(country, action.payload.values))
     },
 
     sortCountriesByName: (state, action) => {
-      let { active, by, order } = state.sorting;
-
       state.sorting.active = true;
       state.sorting.by = "name";
       state.sorting.order = action.payload;
@@ -126,7 +125,6 @@ const countriesSlice = createSlice({
     },
 
     sortCountriesByPopulation: (state, action) => {
-      let { active, by, order } = state.sorting;
       state.sorting.active = true;
       state.sorting.by = "population";
       state.sorting.order = action.payload;
