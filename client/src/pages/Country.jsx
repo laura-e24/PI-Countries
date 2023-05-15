@@ -1,6 +1,5 @@
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from "react-redux";
-import { cleanUpState, getOneCountry } from '../redux/actions';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import NoResults from '../components/NoResults';
@@ -55,8 +54,6 @@ const Country = () => {
   const params = useParams();
   const { countryId } = params;
   
-  const [isLoading, setIsLoading] = useState(false)
-
   useEffect(() => {
     const fetchData = async () => {
       if (countryStatus === EStateGeneric.IDLE) {
@@ -64,7 +61,7 @@ const Country = () => {
       }
     }
     fetchData()
-    return () => dispatch(cleanUpState())
+    // return () => dispatch(cleanUpState())
   }, [countryId, dispatch, countryStatus])
 
   return (  

@@ -5,8 +5,6 @@ import CountryCard from '../components/CountryCard';
 import FilterAndSortBar from '../components/FilterAndSortBar';
 import NoResults from '../components/NoResults';
 import usePagination from '../hooks/usePagination';
-
-import { filterCountries, getActivities, getCountries, sortCountries } from '../redux/actions';
 import HomeSkeleton from '../components/HomeSkeleton';
 import Layout from '../layouts/Layout';
 import CardsContainer from '../components/CardsContainer';
@@ -69,8 +67,9 @@ const Home = () => {
       continents,
       activities,
     }
-    if (filterBy.includes("activity")) dispatch(filterCountriesByActivity(payload.activities))
-    if (filterBy.includes("continent")) dispatch(filterCountriesByContinent(payload.continents))
+
+    if (filterBy.includes("activities")) dispatch(filterCountriesByActivity(payload.activities))
+    if (filterBy.includes("continents")) dispatch(filterCountriesByContinent(payload.continents))
   }
 
   const continents = [

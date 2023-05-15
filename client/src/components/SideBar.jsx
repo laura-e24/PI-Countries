@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
-import { getCountries } from '../redux/actions'
 
 const SideBarComponent = styled.aside`
   padding: 20px 25px;
@@ -86,7 +85,7 @@ const SideBar = ({ jump }) => {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    await  dispatch(getCountries(search))
+    // await  dispatch(getCountries(search))
     navigate(
       search 
       ? `/home?name=${search}`

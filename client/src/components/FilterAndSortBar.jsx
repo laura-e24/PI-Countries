@@ -1,4 +1,6 @@
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { clearAllFilters, clearSorting } from "../features/countries/countriesSlice";
 
 const Container = styled.div`
   padding: 20px 0;
@@ -27,36 +29,64 @@ const FiltersList = ({ filtering, filter, removeFilter }) => (
   [...new Set(filtering[filter]?.values)].map((f, index) => (
     <span className="filter" key={index}>
       {f}
-    <span className="remove-btn" onClick={() => removeFilter(filter, f)}>
-      X
-    </span>
+      <span className="remove-btn" onClick={() => removeFilter(filter, f)}>
+        X
+      </span>
     </span>
   ))
 )
 
+const SortingList = ({ by, order, removeSort }) => (
+  <span className="filter">
+    {by === 'population' ? "Población" : "Nombre"}, {order === 'asc' ? "ascendente" : "descendente"}
+    <span className="remove-btn" onClick={() => removeSort()}>
+      X
+    </span>
+  </span>
+)
+
 const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filteringData, handleSort, handleFilter }) => {
 
-  const defaultValues = { active: false, values: [] }
-
+  const dispatch  = useDispatch();
   const removeFilter = (filter, value) => {
-    const filterValues =  filtering.continents?.values.concat(filtering.activities?.values)
-    if (filterValues.length === 1 ) {
-      setFiltering({ active: false, [filter]: defaultValues })
-      handleFilter(false, defaultValues, defaultValues)
-    } else {
-      setFiltering({ 
-        ...filtering, 
-        [filter]: { 
-          ...filtering[filter], 
-          values: filtering[filter]?.values.filter(f => f !== value) 
-        } 
+    const filterValues = filtering.continents?.values.concat(filtering.activities?.values)
+
+    if (filterValues.length === 1) {
+      setFiltering({
+        active: false,
+        filterBy: [],
+        [filter]: { values: [] }
       })
-      handleFilter(
-        filtering.active, 
-        { ...filtering.continents, values: filtering.continents?.values.filter(f => f !== value) }, 
-        { ...filtering.activities, values: filtering.activities?.values.filter(f => f !== value) }
-      )
+
+      dispatch(clearAllFilters())
+    } 
+    else {
+      setFiltering(filtering => ({
+        ...filtering,
+        filterBy: filtering[filter].values.length === 1 
+        ? filtering.filterBy.filter(f => f !== filter)
+        : filtering.filterBy,
+        [filter]: { values: filtering[filter].values.filter(f => f !== value) }
+      }))
+
+      handleFilter({
+        continents: { values: filtering.continents?.values.filter(f => f !== value) },
+        activities: { values: filtering.activities?.values.filter(f => f !== value) },
+        filterBy: filtering[filter].values.length === 1 
+        ? filtering.filterBy.filter(f => f !== filter)
+        : filtering.filterBy
+      })
     }
+  }
+
+  const removeSort = () => {
+    setSorting({
+      active: false,
+      by: '',
+      order: ''
+    })
+    
+    dispatch(clearSorting())
   }
 
   return (  
@@ -86,7 +116,6 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
       </style>
       <Container>
         <div>
-          
           <Button 
             style={{ marginRight: 10 }} 
             onClick={() => {
@@ -101,7 +130,7 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
                 : { ...filtering, active: true }
               )
 
-              // handleFilter(filtering.active, { filterBy }, { values: [] }, { values: [] })
+              if (filtering.active) dispatch(clearAllFilters())
             }}
           >
             Filtrar
@@ -112,19 +141,16 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
                 setFiltering({ 
                   ...filtering, 
                   filterBy: filtering.filterBy.concat(e.target.value)
-                  // [e.target.value]: { active: true, values: [] } 
                 })
-                // if (!!filtering[e.target.value]?.values.length) 
-                //   handleFilter(filtering.active, filtering.continents, filtering.activities)
               }} 
               name="filterBy"
             >
               <option value="">...</option>
-              <option value="continent">Continente</option>
-              <option value="activity">Actividad turística</option>
+              <option value="continents">Continente</option>
+              <option value="activities">Actividad turística</option>
             </Select>
           )}
-          {filtering.active && filtering.filterBy.includes("continent") && (
+          {filtering.active && filtering.filterBy.includes("continents") && (
             <Select 
               onChange={async (e) => {
                 setFiltering({ 
@@ -149,17 +175,17 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
               )}
             </Select>
           )}
-          {filtering.active && filtering.filterBy.includes("activity") && (
+          {filtering.active && filtering.filterBy.includes("activities") && (
             <Select 
               onChange={(e) => {
                 setFiltering({ 
                   ...filtering, 
-                  activities: { values: filtering.activities.values.concat(e.target.value) }  
+                  activities: { values: filtering.activities?.values.concat(e.target.value) }  
                 })
 
                 handleFilter({ 
                   ...filtering, 
-                  activities: { values: filtering.activities.values.concat(e.target.value) }  
+                  activities: { values: filtering.activities?.values.concat(e.target.value) }  
                 })
               }} 
               name='activities'
@@ -181,6 +207,7 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
                 ? { active: false, by: '', order: '' }
                 : { ...sorting, active: true }
               )
+              if (sorting.active) dispatch(clearSorting())
             }}
           >
             Ordenar
@@ -214,8 +241,14 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
         {(!!filtering.continents?.values.length || !!filtering.activities?.values.length) && (
           <div style={{ marginTop: 8 }}>
             <span id='span'>Filtros aplicados: &nbsp;</span> 
-              {!!filtering.continents?.values.length && <FiltersList filtering={filtering} filter='continents' removeFilter={removeFilter} />}
-              {!!filtering.activities?.values.length && <FiltersList filtering={filtering} filter='activities' removeFilter={removeFilter} />}
+            {!!filtering.continents?.values.length && <FiltersList filtering={filtering} filter='continents' removeFilter={removeFilter} />}
+            {!!filtering.activities?.values.length && <FiltersList filtering={filtering} filter='activities' removeFilter={removeFilter} />}
+          </div>
+        )}
+        {sorting.active && !!sorting.by && !!sorting.order && (
+          <div style={{ marginTop: 8 }}>
+            <span id='span'>Ordenar por: &nbsp;</span> 
+            {<SortingList by={sorting.by} order={sorting.order} removeSort={removeSort} />}
           </div>
         )}
       </Container>

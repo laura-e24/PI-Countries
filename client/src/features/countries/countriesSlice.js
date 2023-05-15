@@ -51,29 +51,46 @@ const countriesSlice = createSlice({
   initialState,
   reducers: {
     // standard reducer logic, with auto-generated action types per reducer
-    // cleanUpState: (state) => {
-    //   state.countries = [];
-    // },
+    clearAllFilters: (state) => {
+      let { by, order } = state.sorting;
+      state.filtering.active = false;
+      state.filtering.filterBy = [];
+      state.filtering.activities = { values: [] }
+      state.filtering.continents = { values: [] }
+      
+      if (state.sorting.active) {
+        state.countries = sortArr(state.originalCountries, order, by)  
+      } else state.countries = state.originalCountries
+    },
+    clearSorting: (state) => {
+      state.sorting.active = false;
+      state.sorting.by = '';
+      state.sorting.order = '';
+
+      if (!state.filtering.active) {
+        state.countries = state.originalCountries 
+      } else state.countries = state.countries
+    },
     filterCountriesByContinent: (state, action) => {
       let { activities } = state.filtering;
       let { by, order } = state.sorting;
 
       state.filtering.active = true;
-      state.filtering.filterBy = state.filtering.filterBy.concat("continent");
+      state.filtering.filterBy = state.filtering.filterBy.concat("continents");
       state.filtering.continents.values = action.payload.values;
 
       let countriesToFilter  
 
-      if (state.filtering.filterBy.includes("continent") && state.filtering.filterBy.includes("activity")) {
+      if (state.filtering.filterBy.includes("continents") && state.filtering.filterBy.includes("activities")) {
         countriesToFilter = state.originalCountries.filter(country => filterByActFn(country, activities.values))
       }
-      else if (!state.filtering.filterBy.includes("continent") && state.filtering.filterBy.includes("activity")) {
+      else if (!state.filtering.filterBy.includes("continents") && state.filtering.filterBy.includes("activities")) {
         countriesToFilter = state.countries
       }
-      else if (state.filtering.filterBy.includes("continent") && !state.filtering.filterBy.includes("activity")) {
+      else if (state.filtering.filterBy.includes("continents") && !state.filtering.filterBy.includes("activities")) {
         countriesToFilter = state.originalCountries
       }
-      else if (!state.filtering.filterBy.includes("continent") && !state.filtering.filterBy.includes("activity")) {
+      else if (!state.filtering.filterBy.includes("continents") && !state.filtering.filterBy.includes("activities")) {
         countriesToFilter = state.countries
       }
 
@@ -86,23 +103,22 @@ const countriesSlice = createSlice({
     filterCountriesByActivity: (state, action) => {
       let { by, order } = state.sorting;
       let { continents } = state.filtering;
-      
       state.filtering.active = true;
-      state.filtering.filterBy = state.filtering.filterBy.concat("activity");
+      state.filtering.filterBy = state.filtering.filterBy.concat("activities");
       state.filtering.activities.values = action.payload.values;
 
       let countriesToFilter = [];
 
-      if (state.filtering.filterBy.includes("continent") && state.filtering.filterBy.includes("activity")) {
+      if (state.filtering.filterBy.includes("continent") && state.filtering.filterBy.includes("activities")) {
         countriesToFilter = state.originalCountries.filter(country => filterByContFn(country, continents.values))
       }
-      else if (!state.filtering.filterBy.includes("continent") && state.filtering.filterBy.includes("activity")) {
+      else if (!state.filtering.filterBy.includes("continent") && state.filtering.filterBy.includes("activities")) {
         countriesToFilter = state.originalCountries
       }
-      else if (state.filtering.filterBy.includes("continent") && !state.filtering.filterBy.includes("activity")) {
+      else if (state.filtering.filterBy.includes("continent") && !state.filtering.filterBy.includes("activities")) {
         countriesToFilter = state.countries
       }
-      else if (!state.filtering.filterBy.includes("continent") && !state.filtering.filterBy.includes("activity")) {
+      else if (!state.filtering.filterBy.includes("continent") && !state.filtering.filterBy.includes("activities")) {
         countriesToFilter = state.countries
       }
 
@@ -178,7 +194,7 @@ export const selectAllCountries = (state) => state.countries.countries;
 export const selectOriginalCountries = (state) => state.countries.originalCountries;
 export const selectOneCountry = (state) => state.countries.country;
 
-export const { filterCountriesByActivity, filterCountriesByContinent, sortCountriesByName, sortCountriesByPopulation } = countriesSlice.actions;
+export const { filterCountriesByActivity, filterCountriesByContinent, sortCountriesByName, sortCountriesByPopulation, clearAllFilters, clearSorting } = countriesSlice.actions;
 
 export const selectAllCountriesStatus = (state) => state.countries.allCountriesStatus;
 export const selectOneCountryStatus = (state) => state.countries.oneCountryStatus;
