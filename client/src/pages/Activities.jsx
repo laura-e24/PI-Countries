@@ -8,6 +8,7 @@ import Layout from '../layouts/Layout';
 import FAIcon from '../components/FAIcon';
 import { deleteActivity, disableActivity, fetchAllActivities, restoreActivity, selectAllActivities, selectAllActivitiesStatus, selectOneActivityStatus } from '../features/activities/activitiesSlice';
 import { EStateGeneric } from '../redux/types';
+import ActivitiesSkeleton from '../components/ActivitiesSkeleton';
 
 const CardsContainer = styled.div`
   justify-content: center;
@@ -92,18 +93,8 @@ const Activities = () => {
   const dispatch  = useDispatch();
   const activities = useSelector(selectAllActivities);
   const activitiesStatus = useSelector(selectAllActivitiesStatus);
-  const oneActivityStatus = useSelector(selectOneActivityStatus);
 
   let navigate = useNavigate();
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     if (activitiesStatus === EStateGeneric.IDLE) {
-  //       await dispatch(fetchAllActivities());
-  //     }
-  //   }
-  //   fetchData()
-  // }, [dispatch, activitiesStatus])
 
   return (  
     <>
@@ -212,7 +203,7 @@ const Activities = () => {
           : <NoResults text='No hay actividades turísticas.' />}
         </CardsContainer>
         </>
-        ) : <CountrySkeleton />}
+        ) : <ActivitiesSkeleton />}
       </Layout>
     </>
   );

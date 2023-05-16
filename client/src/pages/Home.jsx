@@ -79,14 +79,16 @@ const Home = () => {
     'Antarctica',
     'Europe',
   ];
-  const activitiesNames = [...new Set(activities.map(c => c.name))];
+  const activitiesNames = [...new Set(activities
+    .filter(act => !act.deletedAt)
+    .map(c => c.name))];
 
   const filteringData = {
     continents: continents,
     activities: activitiesNames
   }
-console.log(countries)
-console.log(countriesStatus)
+
+  console.log(activities)
   return (  
     <Layout 
       next={next}

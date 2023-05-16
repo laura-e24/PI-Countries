@@ -155,12 +155,12 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
               onChange={async (e) => {
                 setFiltering({ 
                   ...filtering, 
-                  continents: { values: filtering.continents.values.concat(e.target.value) }  
+                  continents: { values: filtering.continents?.values.concat(e.target.value) }  
                 })
                 
                 handleFilter({
                   ...filtering,
-                  continents: { values: filtering.continents.values.concat(e.target.value) }
+                  continents: { values: filtering.continents?.values.concat(e.target.value) }
                 })
               }} 
               name='continents'
