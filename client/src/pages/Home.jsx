@@ -9,7 +9,7 @@ import HomeSkeleton from '../components/HomeSkeleton';
 import Layout from '../layouts/Layout';
 import CardsContainer from '../components/CardsContainer';
 import { fetchAllCountries, filterCountriesByActivity, filterCountriesByContinent, selectAllCountries, selectAllCountriesStatus, sortCountriesByName, sortCountriesByPopulation } from '../features/countries/countriesSlice';
-import { selectAllActivities, selectAllActivitiesStatus } from '../features/activities/activitiesSlice';
+import { selectAllActivities } from '../features/activities/activitiesSlice';
 import { EStateGeneric } from '../redux/types';
 
 const Home = () => {

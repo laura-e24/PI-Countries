@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-// import { createActivity, getCountries, getOneActivity, updateActivity } from "../redux/actions";
-import { capitalize, sortArr } from "../utils";
+import { capitalize } from "../utils";
 import CustomInput from "./CustomInput";
 import CustomSelect from "./CustomSelect";
 import { ButtonComponent } from '../components/GenericButton';
 import { useParams } from "react-router-dom";
 import * as _ from "lodash";
-import { createActivity, fetchOneActivity, selectOneActivity, selectOneActivityStatus, updateActivity } from "../features/activities/activitiesSlice";
-import { fetchAllCountries, selectAllCountries, selectAllCountriesStatus } from "../features/countries/countriesSlice";
+import { createActivity, fetchOneActivity, selectOneActivityStatus, updateActivity } from "../features/activities/activitiesSlice";
+import { selectAllCountries } from "../features/countries/countriesSlice";
 import { EStateGeneric } from "../redux/types";
 
 const Button = styled(ButtonComponent)`

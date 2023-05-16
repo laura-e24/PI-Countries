@@ -52,7 +52,7 @@ const Country = () => {
   const countryStatus = useSelector(selectOneCountryStatus);
   const params = useParams();
   const { countryId } = params;
-  const country = useSelector((state) => state.countries.countries.find(c => c.id == countryId));
+  const country = useSelector((state) => state.countries.countries.find(c => c.id === countryId));
   
   useEffect(() => {
     const fetchData = async () => {

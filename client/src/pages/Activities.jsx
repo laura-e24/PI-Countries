@@ -1,12 +1,10 @@
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import NoResults from '../components/NoResults';
-import CountrySkeleton from '../components/CountrySkeleton';
 import Layout from '../layouts/Layout';
 import FAIcon from '../components/FAIcon';
-import { deleteActivity, disableActivity, fetchAllActivities, restoreActivity, selectAllActivities, selectAllActivitiesStatus, selectOneActivityStatus } from '../features/activities/activitiesSlice';
+import { deleteActivity, disableActivity, restoreActivity, selectAllActivities, selectAllActivitiesStatus } from '../features/activities/activitiesSlice';
 import { EStateGeneric } from '../redux/types';
 import ActivitiesSkeleton from '../components/ActivitiesSkeleton';
 
