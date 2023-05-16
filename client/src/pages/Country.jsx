@@ -1,11 +1,11 @@
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import NoResults from '../components/NoResults';
 import CountrySkeleton from '../components/CountrySkeleton';
 import Layout from '../layouts/Layout';
-import { fetchOneCountry, selectOneCountry, selectOneCountryStatus } from '../features/countries/countriesSlice';
+import { fetchOneCountry, selectOneCountryStatus } from '../features/countries/countriesSlice';
 import { EStateGeneric } from '../redux/types';
 
 const CardsContainer = styled.div`
@@ -49,20 +49,19 @@ const Td = styled.td`
 const Country = () => {
 
   const dispatch  = useDispatch();
-  const country = useSelector(selectOneCountry);
   const countryStatus = useSelector(selectOneCountryStatus);
   const params = useParams();
   const { countryId } = params;
+  const country = useSelector((state) => state.countries.countries.find(c => c.id == countryId));
   
   useEffect(() => {
     const fetchData = async () => {
       if (countryStatus === EStateGeneric.IDLE) {
-        await dispatch(fetchOneCountry(countryId));
+        await dispatch(fetchOneCountry(countryId.toString()));
       }
     }
     fetchData()
-    // return () => dispatch(cleanUpState())
-  }, [countryId, dispatch, countryStatus])
+  }, [countryId])
 
   return (  
     <>

@@ -52,12 +52,11 @@ const Form = styled.form`
 const ActivityForm = ({ setToastify, type = "create" }) => {
 
   const dispatch  = useDispatch();
-  const countries = useSelector(selectAllCountries);
-  const countriesStatus = useSelector(selectAllCountriesStatus);
-  const activity = useSelector(selectOneActivity);
-  const activityStatus = useSelector(selectOneActivityStatus);
   const params = useParams();
   const { activityId } = params;
+  const countries = useSelector(selectAllCountries);
+  const activity = useSelector((state) => state.activities?.activities.find(a => a.id == activityId));
+  const activityStatus = useSelector(selectOneActivityStatus);
 
   const [values, setValues] = useState({
     name: "",
@@ -69,17 +68,14 @@ const ActivityForm = ({ setToastify, type = "create" }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (countriesStatus === EStateGeneric.IDLE) {
-        await dispatch(fetchAllCountries());
-      }
       if (activityStatus === EStateGeneric.IDLE) {
         if (type === "edit") {
-          await dispatch(fetchOneActivity(activityId));
+          await dispatch(fetchOneActivity(activityId.toString()));
         }
       }
     }
     fetchData()
-  }, [dispatch, activityId, countriesStatus, activityStatus])
+  }, [activityId])
 
   useEffect(() => {
     if (type === "edit") {
@@ -170,7 +166,7 @@ const ActivityForm = ({ setToastify, type = "create" }) => {
       countries: values.countries.filter(c => c.id !== id)
     })
   }
-console.log(activity)
+
   return (  
     <>
      <style>
@@ -187,7 +183,7 @@ console.log(activity)
           label='Nombre'
           name='name'
           placeholder='Nombre...'
-          value={values.name} 
+          value={values?.name} 
           onChange={handleChange}
           onBlur={handleError}
         />
@@ -200,7 +196,7 @@ console.log(activity)
           type='number' 
           name='difficulty' 
           placeholder='Dificultad...'
-          value={values.difficulty} 
+          value={values?.difficulty} 
           onChange={handleChange}  
           onBlur={handleError}
         />
@@ -213,7 +209,7 @@ console.log(activity)
           label='Duración'
           name='duration' 
           placeholder='Duración...'
-          value={values.duration} 
+          value={values?.duration} 
           onChange={handleChange}  
           onBlur={handleError}
         />
@@ -245,7 +241,7 @@ console.log(activity)
           onChange={e => {
             setValues({
               ...values,
-              countries: values.countries?.concat(countries.find(c => c.id === e.target.value))
+              countries: values?.countries?.concat(countries.find(c => c.id === e.target.value))
             })
             if (errors.countries.length) {
               setErrors({
@@ -263,7 +259,7 @@ console.log(activity)
         <ErrorMessage>{errors.countries}</ErrorMessage>
       </div>
       <div style={{ display:'flex',  flexWrap: 'wrap',marginLeft: 10  }}>
-        {values.countries && [...new Set(values.countries)].map((c, i) => (
+        {values?.countries && [...new Set(values?.countries)].map((c, i) => (
           <div style={{ display: 'flex' }} key={i}>
             <p className='my-auto' style={{  fontWeight: 700, color: '#818181', paddingBottom: 0 }}>{c.name}</p>
             <RemoveButton onClick={() => removeCountryOption(c.id)}>

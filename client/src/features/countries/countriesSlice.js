@@ -5,9 +5,9 @@ import { filterByActFn, filterByContFn, sortArr } from "../../utils";
 
 export const fetchAllCountries = createAsyncThunk(
   'countries/fetchAllCountries',
-  async (_, { rejectWithValue }) => {
+  async (name, { rejectWithValue }) => {
     try {
-      const response = await getAllCountries()
+      const response = await getAllCountries(name)
       return response.data
     } catch (error) {
       return rejectWithValue(error.response.data)
@@ -51,6 +51,9 @@ const countriesSlice = createSlice({
   initialState,
   reducers: {
     // standard reducer logic, with auto-generated action types per reducer
+    cleanUpState: (state) => {
+      state.country = {};
+    },
     clearAllFilters: (state) => {
       let { by, order } = state.sorting;
       state.filtering.active = false;
@@ -194,7 +197,7 @@ export const selectAllCountries = (state) => state.countries.countries;
 export const selectOriginalCountries = (state) => state.countries.originalCountries;
 export const selectOneCountry = (state) => state.countries.country;
 
-export const { filterCountriesByActivity, filterCountriesByContinent, sortCountriesByName, sortCountriesByPopulation, clearAllFilters, clearSorting } = countriesSlice.actions;
+export const { filterCountriesByActivity, filterCountriesByContinent, sortCountriesByName, sortCountriesByPopulation, clearAllFilters, clearSorting, cleanUpState } = countriesSlice.actions;
 
 export const selectAllCountriesStatus = (state) => state.countries.allCountriesStatus;
 export const selectOneCountryStatus = (state) => state.countries.oneCountryStatus;

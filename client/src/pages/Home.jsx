@@ -22,18 +22,16 @@ const Home = () => {
   const countriesStatus = useSelector(selectAllCountriesStatus);
   const activities = useSelector(selectAllActivities);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      dispatch(fetchAllCountries(name))
+    }
+    fetchData()
+  }, [name, dispatch])
+  
+
   const { next, prev, jump, currentData, currentPage, pages } = usePagination(countries)
   const sliceCountries = currentData()
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     if (countriesStatus === EStateGeneric.IDLE) {
-
-  //       await dispatch(fetchAllCountries());
-  //     }
-  //   }
-  //   fetchData()
-  // }, [name, dispatch, countriesStatus])
 
   const [sorting, setSorting] = useState({
     active: false,

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
+import { fetchAllCountries } from '../features/countries/countriesSlice'
 
 const SideBarComponent = styled.aside`
   padding: 20px 25px;
@@ -85,14 +86,18 @@ const SideBar = ({ jump }) => {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    // await  dispatch(getCountries(search))
+    search 
+    ? await dispatch(fetchAllCountries(search))
+    : await dispatch(fetchAllCountries());
+    
     navigate(
       search 
       ? `/home?name=${search}`
       : '/home'
     );
-    jump(1)
     setSearch('')
+    jump(1)
+
   }
 
   return (  
@@ -117,7 +122,7 @@ const SideBar = ({ jump }) => {
           </div>
         </form>
         <Menu>
-          <Link onClick={() => jump(1)} to='/home' style={{ textDecoration: 'none' }}>
+          <Link to='/home' style={{ textDecoration: 'none' }}>
             <MenuItem active={location.pathname.includes('home')}>🏠 Home</MenuItem>
           </Link>
           <Link to='/activities' style={{ textDecoration: 'none' }}>
