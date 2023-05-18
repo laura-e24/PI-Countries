@@ -70,9 +70,9 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
       }))
 
       handleFilter({
-        continents: { values: filtering.continents?.values.filter(f => f !== value) },
-        activities: { values: filtering.activities?.values.filter(f => f !== value) },
-        filterBy: filtering[filter].values.length === 1 
+        continents: { values: filtering.continents?.values?.filter(f => f !== value) },
+        activities: { values: filtering.activities?.values?.filter(f => f !== value) },
+        filterBy: filtering[filter].values?.length === 1 
         ? filtering.filterBy.filter(f => f !== filter)
         : filtering.filterBy
       })
@@ -155,12 +155,12 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
               onChange={async (e) => {
                 setFiltering({ 
                   ...filtering, 
-                  continents: { values: filtering.continents?.values.concat(e.target.value) }  
+                  continents: { values: filtering.continents?.values?.concat(e.target.value) }  
                 })
                 
                 handleFilter({
                   ...filtering,
-                  continents: { values: filtering.continents?.values.concat(e.target.value) }
+                  continents: { values: filtering.continents?.values?.concat(e.target.value) }
                 })
               }} 
               name='continents'
@@ -180,12 +180,12 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
               onChange={(e) => {
                 setFiltering({ 
                   ...filtering, 
-                  activities: { values: filtering.activities?.values.concat(e.target.value) }  
+                  activities: { values: filtering.activities?.values?.concat(e.target.value) }  
                 })
 
                 handleFilter({ 
                   ...filtering, 
-                  activities: { values: filtering.activities?.values.concat(e.target.value) }  
+                  activities: { values: filtering.activities?.values?.concat(e.target.value) }  
                 })
               }} 
               name='activities'
@@ -238,11 +238,11 @@ const FilterAndSortBar = ({ sorting, filtering, setSorting, setFiltering, filter
             </Select>
           )}
         </div>
-        {(!!filtering.continents?.values.length || !!filtering.activities?.values.length) && (
+        {(!!filtering.continents?.values?.length || !!filtering.activities?.values?.length) && (
           <div style={{ marginTop: 8 }}>
             <span id='span'>Filtros aplicados: &nbsp;</span> 
-            {!!filtering.continents?.values.length && <FiltersList filtering={filtering} filter='continents' removeFilter={removeFilter} />}
-            {!!filtering.activities?.values.length && <FiltersList filtering={filtering} filter='activities' removeFilter={removeFilter} />}
+            {!!filtering.continents?.values?.length && <FiltersList filtering={filtering} filter='continents' removeFilter={removeFilter} />}
+            {!!filtering.activities?.values?.length && <FiltersList filtering={filtering} filter='activities' removeFilter={removeFilter} />}
           </div>
         )}
         {sorting.active && !!sorting.by && !!sorting.order && (
