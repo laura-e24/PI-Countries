@@ -88,7 +88,7 @@ const Home = () => {
     activities: activitiesNames
   }
 
-  console.log(activities)
+
   return (  
     <Layout 
       next={next}
