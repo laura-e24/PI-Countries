@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { capitalize } from "../utils";
+import { capitalize, sortArr } from "../utils";
 import CustomInput from "./CustomInput";
 import CustomSelect from "./CustomSelect";
 import { ButtonComponent } from '../components/GenericButton';
@@ -10,6 +10,7 @@ import * as _ from "lodash";
 import { createActivity, fetchOneActivity, selectOneActivityStatus, updateActivity } from "../features/activities/activitiesSlice";
 import { selectAllCountries } from "../features/countries/countriesSlice";
 import { EStateGeneric } from "../redux/types";
+
 
 const Button = styled(ButtonComponent)`
   margin-top: 20px;
@@ -48,7 +49,7 @@ const Form = styled.form`
   width: 60%
 `
 
-const ActivityForm = ({ setToastify, type = "create" }) => {
+const ActivityForm = ({ type = "create" }) => {
 
   const dispatch  = useDispatch();
   const params = useParams();
@@ -138,25 +139,9 @@ const ActivityForm = ({ setToastify, type = "create" }) => {
       name: capitalize(values.name.toLocaleLowerCase())
     }
 
-    try {
-      const response = type === "create" 
-      ? await  dispatch(createActivity(activity)) 
-      : await  dispatch(updateActivity(activity))
-
-      setToastify({
-        display: true, 
-        type: 'success',
-        text: `¡Actividad ${type === "create" ? "creada" : "editada" } con éxito!` 
-      })
-      console.log(response)
-    } catch (error) {
-      console.log(error.response)
-      setToastify({
-        display: true, 
-        type: 'error',
-        text: error.response?.data.message || JSON.stringify(error)
-      })
-    }
+    type === "create" 
+    ? await  dispatch(createActivity(activity)) 
+    : await  dispatch(updateActivity(activity))
   }
 
   const removeCountryOption = id => {
@@ -251,7 +236,7 @@ const ActivityForm = ({ setToastify, type = "create" }) => {
           }}
         >
           <option value="">Seleccionar...</option>
-          {countries.map((country) => (
+          {sortArr(countries.slice(), "asc", "name")?.map((country) => (
             <option key={country.id} value={country.id}>{country.name}</option>
           ))}
         </CustomSelect>
@@ -270,9 +255,9 @@ const ActivityForm = ({ setToastify, type = "create" }) => {
           </div>
         ))}
       </div>
-      </div>
+    </div>
     <div id='button'>
-      <Button>
+      <Button disabled={values && Object.values(values).some(err => err === "")}>
         {type === "create" ? "Crear" : "Editar"} ✏️
       </Button>
     </div>

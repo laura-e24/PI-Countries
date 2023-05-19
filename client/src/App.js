@@ -5,6 +5,8 @@ import Country from "./pages/Country.jsx"
 import Activity from "./pages/Activity.jsx"
 import Activities from "./pages/Activities.jsx"
 import "./assets/styles/css/all.min.css"
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function App() {
   return (

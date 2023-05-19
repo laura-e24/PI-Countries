@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import Layout from '../layouts/Layout';
-import Toast from '../components/Toast';
 import ActivityForm from '../components/ActivityForm';
+import { ToastContainer } from 'react-toastify';
 
 const Card = styled.div`
   padding: 20px;
@@ -18,11 +18,6 @@ const H2 = styled.h2`
 `
 
 const Activity = ({ operation = "create" }) => {
-  const [toastify, setToastify] = useState({
-    display: false,
-    type: '',
-    text: ''
-  })
 
   return (
     <>
@@ -30,12 +25,12 @@ const Activity = ({ operation = "create" }) => {
         <H2>{operation === "create" ? "Crear " : "Editar"} actividad</H2>
         <Card>
           <div style={{display:'flex', justifyContent: 'space-between'}}>
-            <ActivityForm setToastify={setToastify} type={operation} />
+            <ActivityForm type={operation} />
             <img alt='activity' src='/activity.png' width={300} className='my-auto' />
           </div>
         </Card>
       </Layout>
-      {toastify.display && <Toast toastify={toastify} setToastify={setToastify} />} 
+      <ToastContainer />
     </>
   );
 }

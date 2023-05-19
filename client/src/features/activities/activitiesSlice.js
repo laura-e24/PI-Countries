@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getAllActivities, getOneActivity, createOneActivity, deleteOneActivity, disableOneActivity, restoreOneActivity, updateOneActivity } from "./activitiesApi";
 import { EStateGeneric } from "../../redux/types";
+import { toast } from 'react-toastify';
+
 
 export const fetchAllActivities = createAsyncThunk(
   'activities/fetchAllActivities',
@@ -137,14 +139,18 @@ const activitiesSlice = createSlice({
       state.activities = state.activities.concat(action.payload.activity);
       state.allActivitiesStatus = EStateGeneric.SUCCEEDED;
       state.oneActivityStatus = EStateGeneric.SUCCEEDED;
+
+      toast("Actividad creada exitosamente", { type: "success" })
     })
 
     builder.addCase(createActivity.pending, (state, action) => {
       state.oneActivityStatus = EStateGeneric.PENDING;
+      toast("Cargando, por favor espere...", { type: "info" })
     })
 
     builder.addCase(createActivity.rejected, (state, action) => {
       state.oneActivityStatus = EStateGeneric.FAILED;
+      toast(action.payload?.message, { type: "error" })
     })
 
 
@@ -204,14 +210,18 @@ const activitiesSlice = createSlice({
       });
       state.allActivitiesStatus = EStateGeneric.SUCCEEDED;
       state.oneActivityStatus = EStateGeneric.SUCCEEDED;
+
+      toast("Actividad editada exitosamente", { type: "success" })
     })
 
     builder.addCase(updateActivity.pending, (state, action) => {
       state.oneActivityStatus = EStateGeneric.PENDING;
+      toast("Cargando, por favor espere...", { type: "info" })
     })
 
     builder.addCase(updateActivity.rejected, (state, action) => {
       state.oneActivityStatus = EStateGeneric.FAILED;
+      toast(action.payload?.message, { type: "error" })
     })
   },
 })

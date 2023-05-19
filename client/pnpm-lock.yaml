@@ -37,6 +37,9 @@ dependencies:
   react-scripts:
     specifier: ^5.0.1
     version: 5.0.1(@babel/plugin-syntax-flow@7.21.4)(@babel/plugin-transform-react-jsx@7.21.5)(eslint@8.40.0)(react@17.0.2)(typescript@5.0.4)
+  react-toastify:
+    specifier: ^9.1.3
+    version: 9.1.3(react-dom@17.0.2)(react@17.0.2)
   redux:
     specifier: ^4.0.5
     version: 4.0.5
@@ -3706,6 +3709,11 @@ packages:
       string-width: 4.2.3
       strip-ansi: 6.0.1
       wrap-ansi: 7.0.0
+    dev: false
+
+  /clsx@1.2.1:
+    resolution: {integrity: sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==}
+    engines: {node: '>=6'}
     dev: false
 
   /co@4.6.0:
@@ -8662,6 +8670,17 @@ packages:
       - webpack-cli
       - webpack-hot-middleware
       - webpack-plugin-serve
+    dev: false
+
+  /react-toastify@9.1.3(react-dom@17.0.2)(react@17.0.2):
+    resolution: {integrity: sha512-fPfb8ghtn/XMxw3LkxQBk3IyagNpF/LIKjOBflbexr2AWxAH1MJgvnESwEwBn9liLFXgTKWgBSdZpw9m4OTHTg==}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      clsx: 1.2.1
+      react: 17.0.2
+      react-dom: 17.0.2(react@17.0.2)
     dev: false
 
   /react@17.0.2:
