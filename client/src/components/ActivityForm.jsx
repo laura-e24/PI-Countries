@@ -207,11 +207,11 @@ console.log(values)
           onBlur={handleError}
           onChange={handleChange}
         >
-          <option value="">Seleccionar...</option>
+          <option value="" selected={!values?.season}>Seleccionar...</option>
           <option value='Otoño' selected={values?.season === "Otoño"}>Otoño</option>
           <option value='Invierno' selected={values?.season === "Invierno"}>Invierno</option>
-          <option value='Primavera'>Primavera</option>
-          <option value='Verano'>Verano</option>
+          <option value='Primavera' selected={values?.season === "Primavera"}>Primavera</option>
+          <option value='Verano' selected={values?.season === "Verano"}>Verano</option>
         </CustomSelect>
         <ErrorMessage>{errors.season}</ErrorMessage>
       </div>
