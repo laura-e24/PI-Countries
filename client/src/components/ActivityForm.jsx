@@ -81,7 +81,7 @@ const ActivityForm = ({ type = "create" }) => {
     if (type === "edit") {
       setValues(activity)
     }
-  }, [dispatch, activity])
+  }, [])
 
   const [errors, setErrors] = useState({
     name: "",
@@ -150,7 +150,7 @@ const ActivityForm = ({ type = "create" }) => {
       countries: values.countries.filter(c => c.id !== id)
     })
   }
-
+console.log(values)
   return (  
     <>
      <style>
