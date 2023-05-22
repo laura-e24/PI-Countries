@@ -206,6 +206,7 @@ console.log(values)
           name='season' 
           onBlur={handleError}
           onChange={handleChange}
+	  defaultValue={values.season}
         >
           <option value="">Seleccionar...</option>
           <option value='Otoño'>Otoño</option>
