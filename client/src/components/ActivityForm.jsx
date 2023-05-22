@@ -87,7 +87,7 @@ const ActivityForm = ({ type = "create" }) => {
         countries: activity?.countries
       })
     }
-  }, [activityId])
+  }, [])
 
   const [errors, setErrors] = useState({
     name: "",
