@@ -10,7 +10,14 @@ import axios from 'axios';
 import { fetchAllCountries } from './features/countries/countriesSlice';
 import { fetchAllActivities } from './features/activities/activitiesSlice';
 
-axios.defaults.baseURL = process.env.REACT_APP_API || 'http://localhost:3001'
+axios.defaults.baseURL = import.meta.env.PROD
+  ? import.meta.env.VITE_SERVER_URL
+  : 'http://localhost:3001';
+
+console.log(import.meta.env.DEV 
+  ? "You are reading this from DEVELOPMENT MODE" 
+  : import.meta.env.PROD ? "You are reading this from PRODUCTION MODE"
+  : import.meta.env)
 
 store.dispatch(fetchAllCountries())
 store.dispatch(fetchAllActivities())

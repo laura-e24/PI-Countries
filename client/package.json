@@ -22,7 +22,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "vite",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -46,6 +46,11 @@
     ]
   },
   "devDependencies": {
-    "tailwindcss": "^3.2.7"
+    "@types/node": "^20.2.3",
+    "@vitejs/plugin-react": "^4.0.0",
+    "tailwindcss": "^3.2.7",
+    "vite": "^4.3.8",
+    "vite-plugin-svgr": "^3.2.0",
+    "vite-tsconfig-paths": "^4.2.0"
   }
 }
