@@ -150,7 +150,7 @@ const ActivityForm = ({ type = "create" }) => {
       countries: values.countries.filter(c => c.id !== id)
     })
   }
-console.log(values)
+console.log(activity)
   return (  
     <>
      <style>
