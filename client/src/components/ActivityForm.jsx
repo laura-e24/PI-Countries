@@ -157,7 +157,6 @@ const ActivityForm = ({ type = "create" }) => {
     return !val || (typeof val === "object" && !val.length)
   })) || Object.values(errors).some(err => !!err)
 
-  console.log(values)
 
   return (  
     <>
