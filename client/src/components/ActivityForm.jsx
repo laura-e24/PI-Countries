@@ -79,9 +79,15 @@ const ActivityForm = ({ type = "create" }) => {
 
   useEffect(() => {
     if (type === "edit") {
-      setValues(activity)
+      setValues({
+        name: activity?.name,
+        difficulty: activity?.difficulty,
+        duration: activity?.duration,
+        season: activity?.season,
+        countries: activity?.countries
+      })
     }
-  }, [])
+  }, [activity.id])
 
   const [errors, setErrors] = useState({
     name: "",
