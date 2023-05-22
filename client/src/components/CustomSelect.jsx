@@ -24,7 +24,7 @@ const Label = styled.label`
   display: block;
 `
 
-const CustomSelect = ({ children, onChange, name, label, errors, onBlur, defaultValue = "Seleccionar..." }) => {
+const CustomSelect = ({ children, onChange, name, label, errors, onBlur, defaultValue }) => {
 
   return (  
     <>
@@ -35,7 +35,7 @@ const CustomSelect = ({ children, onChange, name, label, errors, onBlur, default
           name={name} 
           onBlur={onBlur}
           onChange={onChange}
-          defaultValue={defaultValue}
+          value={defaultValue || ""}
         >
           {children}
         </Select>

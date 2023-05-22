@@ -7,6 +7,7 @@ import FAIcon from '../components/FAIcon';
 import { deleteActivity, disableActivity, restoreActivity, selectAllActivities, selectAllActivitiesStatus } from '../features/activities/activitiesSlice';
 import { EStateGeneric } from '../redux/types';
 import ActivitiesSkeleton from '../components/ActivitiesSkeleton';
+import { ToastContainer } from 'react-toastify';
 
 const CardsContainer = styled.div`
   justify-content: center;
@@ -203,6 +204,7 @@ const Activities = () => {
         </>
         ) : <ActivitiesSkeleton />}
       </Layout>
+      <ToastContainer />
     </>
   );
 }

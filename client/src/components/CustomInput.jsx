@@ -34,7 +34,7 @@ const CustomInput = ({ label, type = 'text', name, value, onChange, onBlur, plac
           placeholder={placeholder} 
           type={type} 
           name={name} 
-          value={value} 
+          value={value || ""} 
           onChange={onChange} 
           onBlur={onBlur}
         />

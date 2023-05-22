@@ -100,9 +100,9 @@ const activitiesSlice = createSlice({
   initialState,
   reducers: {
     // standard reducer logic, with auto-generated action types per reducer
-    // cleanUpState: (state) => {
-    //   state.activities = [];
-    // },
+    cleanUpState: (state) => {
+      state.activity = {};
+    },
   },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
@@ -140,7 +140,7 @@ const activitiesSlice = createSlice({
       state.allActivitiesStatus = EStateGeneric.SUCCEEDED;
       state.oneActivityStatus = EStateGeneric.SUCCEEDED;
 
-      toast("Actividad creada exitosamente", { type: "success" })
+      toast("Actividad creada exitosamente", { type: "success", autoClose: 1000 })
     })
 
     builder.addCase(createActivity.pending, (state, action) => {
@@ -158,6 +158,8 @@ const activitiesSlice = createSlice({
       state.activities = state.activities.filter(act => act.id !== action.payload);
       state.allActivitiesStatus = EStateGeneric.SUCCEEDED;
       state.oneActivityStatus = EStateGeneric.SUCCEEDED;
+
+      toast("Actividad eliminada exitosamente", { type: "success", autoClose: 1000 })
     })
 
     builder.addCase(deleteActivity.pending, (state, action) => {
@@ -166,6 +168,7 @@ const activitiesSlice = createSlice({
 
     builder.addCase(deleteActivity.rejected, (state, action) => {
       state.oneActivityStatus = EStateGeneric.FAILED;
+      toast(action.payload?.message, { type: "error" })
     })
 
     
@@ -173,6 +176,7 @@ const activitiesSlice = createSlice({
       state.activities = action.payload.data;
       state.oneActivityStatus = EStateGeneric.SUCCEEDED;
       state.allActivitiesStatus = EStateGeneric.SUCCEEDED;
+      toast("Actividad deshabilitada exitosamente", { type: "success", autoClose: 1000 })
     })
 
     builder.addCase(disableActivity.pending, (state, action) => {
@@ -181,6 +185,7 @@ const activitiesSlice = createSlice({
 
     builder.addCase(disableActivity.rejected, (state, action) => {
       state.oneActivityStatus = EStateGeneric.FAILED;
+      toast(action.payload?.message, { type: "error" })
     })
 
 
@@ -188,6 +193,7 @@ const activitiesSlice = createSlice({
       state.activities = action.payload.data;
       state.oneActivityStatus = EStateGeneric.SUCCEEDED;
       state.allActivitiesStatus = EStateGeneric.SUCCEEDED;
+      toast("Actividad restaurada exitosamente", { type: "success", autoClose: 1000 })
     })
 
     builder.addCase(restoreActivity.pending, (state, action) => {
@@ -196,6 +202,7 @@ const activitiesSlice = createSlice({
 
     builder.addCase(restoreActivity.rejected, (state, action) => {
       state.oneActivityStatus = EStateGeneric.FAILED;
+      toast(action.payload?.message, { type: "error" })
     })
 
 
@@ -211,7 +218,7 @@ const activitiesSlice = createSlice({
       state.allActivitiesStatus = EStateGeneric.SUCCEEDED;
       state.oneActivityStatus = EStateGeneric.SUCCEEDED;
 
-      toast("Actividad editada exitosamente", { type: "success" })
+      toast("Actividad editada exitosamente", { type: "success", autoClose: 1000 })
     })
 
     builder.addCase(updateActivity.pending, (state, action) => {
@@ -231,7 +238,7 @@ export default activitiesSlice.reducer
 export const selectAllActivities = (state) => state.activities.activities;
 export const selectOneActivity = (state) => state.activities.activity;
 
-// export const { cleanUpState } = productsSlice.actions;
+export const { cleanUpState } = activitiesSlice.actions;
 
 export const selectAllActivitiesStatus = (state) => state.activities.allActivitiesStatus;
 export const selectOneActivityStatus = (state) => state.activities.oneActivityStatus;

@@ -7,7 +7,7 @@ import CustomSelect from "./CustomSelect";
 import { ButtonComponent } from '../components/GenericButton';
 import { useParams } from "react-router-dom";
 import * as _ from "lodash";
-import { createActivity, fetchOneActivity, selectOneActivityStatus, updateActivity } from "../features/activities/activitiesSlice";
+import { cleanUpState, createActivity, fetchOneActivity, selectOneActivity, selectOneActivityStatus, updateActivity } from "../features/activities/activitiesSlice";
 import { selectAllCountries } from "../features/countries/countriesSlice";
 import { EStateGeneric } from "../redux/types";
 
@@ -55,8 +55,7 @@ const ActivityForm = ({ type = "create" }) => {
   const params = useParams();
   const { activityId } = params;
   const countries = useSelector(selectAllCountries);
-  const activity = useSelector((state) => state.activities?.activities.find(a => a.id == activityId));
-  const activityStatus = useSelector(selectOneActivityStatus);
+  const activity = useSelector((state) => state.activities.activities.find(a => a.id == activityId));
 
   const [values, setValues] = useState({
     name: "",
@@ -67,27 +66,16 @@ const ActivityForm = ({ type = "create" }) => {
   })
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (activityStatus === EStateGeneric.IDLE) {
-        if (type === "edit") {
-          await dispatch(fetchOneActivity(activityId.toString()));
-        }
-      }
-    }
-    fetchData()
-  }, [activityId])
-
-  useEffect(() => {
     if (type === "edit") {
-      setValues({
+      setValues(() => ({
         name: activity?.name,
         difficulty: activity?.difficulty,
         duration: activity?.duration,
         season: activity?.season,
         countries: activity?.countries
-      })
+      }))
     }
-  }, [])
+  }, [activity && activity.id])
 
   const [errors, setErrors] = useState({
     name: "",
@@ -129,7 +117,14 @@ const ActivityForm = ({ type = "create" }) => {
       })
     }
 
-    if (!values[e.target.name] || (!values[e.target.name].length)) {
+    if (values.duration && (values.duration < 1 || values.duration > 24)) {
+      setErrors({
+        ...errors,
+        duration: 'La duración debe ser entre 1 y 24 horas.'
+      })
+    }
+
+    if (!values[e.target.name] || (typeof values[e.target.name] === "object" && !values[e.target.name].length)) {
       setErrors({
         ...errors,
         [e.target.name]: errorsMsg[e.target.name]
@@ -142,6 +137,7 @@ const ActivityForm = ({ type = "create" }) => {
 
     const activity = {
       ...values,
+      id: activityId,
       name: capitalize(values.name.toLocaleLowerCase())
     }
 
@@ -156,7 +152,13 @@ const ActivityForm = ({ type = "create" }) => {
       countries: values.countries.filter(c => c.id !== id)
     })
   }
-console.log(activity)
+
+  const isDisabled = (values && Object.values(values).some(val => {
+    return !val || (typeof val === "object" && !val.length)
+  })) || Object.values(errors).some(err => !!err)
+
+  console.log(values)
+
   return (  
     <>
      <style>
@@ -212,12 +214,13 @@ console.log(activity)
           name='season' 
           onBlur={handleError}
           onChange={handleChange}
+          defaultValue={values.season}
         >
-          <option value="" selected={!values?.season}>Seleccionar...</option>
-          <option value='Otoño' selected={values?.season === "Otoño"}>Otoño</option>
-          <option value='Invierno' selected={values?.season === "Invierno"}>Invierno</option>
-          <option value='Primavera' selected={values?.season === "Primavera"}>Primavera</option>
-          <option value='Verano' selected={values?.season === "Verano"}>Verano</option>
+          <option value="" >Seleccionar...</option>
+          <option value='Otoño' >Otoño</option>
+          <option value='Invierno' >Invierno</option>
+          <option value='Primavera'>Primavera</option>
+          <option value='Verano' >Verano</option>
         </CustomSelect>
         <ErrorMessage>{errors.season}</ErrorMessage>
       </div>
@@ -231,7 +234,7 @@ console.log(activity)
           onChange={e => {
             setValues({
               ...values,
-              countries: values?.countries?.concat(countries.find(c => c.id === e.target.value))
+              countries: values?.countries?.concat(countries.find(c => c.id == e.target.value))
             })
             if (errors.countries.length) {
               setErrors({
@@ -249,7 +252,7 @@ console.log(activity)
         <ErrorMessage>{errors.countries}</ErrorMessage>
       </div>
       <div style={{ display:'flex',  flexWrap: 'wrap',marginLeft: 10  }}>
-        {values?.countries && [...new Set(values?.countries)].map((c, i) => (
+        {!!values?.countries?.length && [...new Set(values?.countries)].map((c, i) => (
           <div style={{ display: 'flex' }} key={i}>
             <p className='my-auto' style={{  fontWeight: 700, color: '#818181', paddingBottom: 0 }}>{c.name}</p>
             <RemoveButton onClick={() => removeCountryOption(c.id)}>
@@ -263,7 +266,8 @@ console.log(activity)
       </div>
     </div>
     <div id='button'>
-      <Button disabled={values && Object.values(values).some(err => err === "")}>
+      <Button disabled={isDisabled}
+      >
         {type === "create" ? "Crear" : "Editar"} ✏️
       </Button>
     </div>
