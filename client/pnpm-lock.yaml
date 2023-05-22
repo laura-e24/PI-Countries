@@ -49,6 +49,9 @@ dependencies:
   styled-components:
     specifier: ^5.3.6
     version: 5.3.6(react-dom@17.0.2)(react-is@18.2.0)(react@17.0.2)
+  typescript:
+    specifier: ^5.0.4
+    version: 5.0.4
   web-vitals:
     specifier: ^2.1.4
     version: 2.1.4
