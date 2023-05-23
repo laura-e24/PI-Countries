@@ -88,7 +88,7 @@ const Home = () => {
     activities: activitiesNames
   }
 
-
+console.log(countriesStatus)
   return (  
     <Layout 
       next={next}
