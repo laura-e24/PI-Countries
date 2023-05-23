@@ -23,11 +23,14 @@ const Home = () => {
   const activities = useSelector(selectAllActivities);
 
   useEffect(() => {
-    const fetchData = async () => {
+    //const fetchData = async () => {
+    if (countriesStatus === EStateGeneric.IDLE) {
       dispatch(fetchAllCountries(name))
     }
-    fetchData()
-  }, [name, dispatch])
+      
+    //}
+    //fetchData()
+  }, [name, dispatch, countriesStatus])
   
 
   const { next, prev, jump, currentData, currentPage, pages } = usePagination(countries)
