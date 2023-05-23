@@ -90,14 +90,15 @@ const SideBar = ({ jump }) => {
     ? await dispatch(fetchAllCountries(search))
     : await dispatch(fetchAllCountries());
     
+    
     navigate(
       search 
       ? `/home?name=${search}`
       : '/home'
     );
     setSearch('')
-    jump(1)
-
+    
+    return () => jump(1)
   }
 
   return (  

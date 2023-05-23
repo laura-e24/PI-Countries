@@ -24,7 +24,7 @@ const Activity = ({ operation = "create" }) => {
       <Layout>
         <H2>{operation === "create" ? "Crear " : "Editar"} actividad</H2>
         <Card>
-          <div style={{display:'flex', justifyContent: 'space-between'}}>
+          <div style={{display:'flex', justifyContent: 'space-between', width: '100%'}}>
             <ActivityForm type={operation} />
             <img alt='activity' src='/activity.png' width={300} className='my-auto' />
           </div>

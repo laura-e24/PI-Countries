@@ -7,8 +7,6 @@ import { BrowserRouter } from "react-router-dom"
 import { Provider } from "react-redux";
 import store from "./redux/store/index";
 import axios from 'axios';
-import { fetchAllCountries } from './features/countries/countriesSlice';
-import { fetchAllActivities } from './features/activities/activitiesSlice';
 
 axios.defaults.baseURL = import.meta.env.PROD
   ? import.meta.env.VITE_SERVER_URL
@@ -19,8 +17,6 @@ console.log(import.meta.env.DEV
   : import.meta.env.PROD ? "You are reading this from PRODUCTION MODE"
   : import.meta.env)
 
-// store.dispatch(fetchAllCountries())
-// store.dispatch(fetchAllActivities())
 
 ReactDOM.render(
   <React.StrictMode>

@@ -9,7 +9,7 @@ import HomeSkeleton from '../components/HomeSkeleton';
 import Layout from '../layouts/Layout';
 import CardsContainer from '../components/CardsContainer';
 import { fetchAllCountries, filterCountriesByActivity, filterCountriesByContinent, selectAllCountries, selectAllCountriesStatus, sortCountriesByName, sortCountriesByPopulation } from '../features/countries/countriesSlice';
-import { selectAllActivities } from '../features/activities/activitiesSlice';
+import { fetchAllActivities, selectAllActivities, selectAllActivitiesStatus } from '../features/activities/activitiesSlice';
 import { EStateGeneric } from '../redux/types';
 
 const Home = () => {
@@ -20,18 +20,20 @@ const Home = () => {
 
   const countries = useSelector(selectAllCountries);
   const countriesStatus = useSelector(selectAllCountriesStatus);
+  const activitiesStatus = useSelector(selectAllActivitiesStatus);
   const activities = useSelector(selectAllActivities);
 
   useEffect(() => {
-    //const fetchData = async () => {
-    if (countriesStatus === EStateGeneric.IDLE) {
-      dispatch(fetchAllCountries(name))
+    const fetchData = async () => {
+      if (countriesStatus === EStateGeneric.IDLE) {
+        await dispatch(fetchAllCountries(name))
+      }
+      if (activitiesStatus === EStateGeneric.IDLE) {
+        await dispatch(fetchAllActivities())
+      }
     }
-      
-    //}
-    //fetchData()
-  }, [name, dispatch, countriesStatus])
-  
+    fetchData()
+  }, [countriesStatus, activitiesStatus, name, dispatch])
 
   const { next, prev, jump, currentData, currentPage, pages } = usePagination(countries)
   const sliceCountries = currentData()
@@ -90,8 +92,7 @@ const Home = () => {
     continents: continents,
     activities: activitiesNames
   }
-
-console.log(countriesStatus)
+  
   return (  
     <Layout 
       next={next}
