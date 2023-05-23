@@ -48,7 +48,7 @@ const ActivitiesSkeleton = () => {
       <div className="w-full" style={{ marginTop: 40, marginBottom: 20 }}>
         <CardsContainer>
           {new Array(2).fill(0).map((_, index) => (
-            <>
+            <span key={index}>
             <div className="flex">
               <ButtonSkeleton className="animation-pulse"></ButtonSkeleton>
               <ButtonSkeleton className="animation-pulse"></ButtonSkeleton>
@@ -67,7 +67,7 @@ const ActivitiesSkeleton = () => {
                 <TextSkeleton className="animation-pulse"></TextSkeleton>
               </div>
             </Card>
-            </>
+            </span>
           ))}
         </CardsContainer>
       </div>

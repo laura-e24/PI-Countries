@@ -4,10 +4,11 @@ import styled from 'styled-components';
 import NoResults from '../components/NoResults';
 import Layout from '../layouts/Layout';
 import FAIcon from '../components/FAIcon';
-import { deleteActivity, disableActivity, restoreActivity, selectAllActivities, selectAllActivitiesStatus } from '../features/activities/activitiesSlice';
+import { deleteActivity, disableActivity, fetchAllActivities, restoreActivity, selectAllActivities, selectAllActivitiesStatus } from '../features/activities/activitiesSlice';
 import { EStateGeneric } from '../redux/types';
 import ActivitiesSkeleton from '../components/ActivitiesSkeleton';
 import { ToastContainer } from 'react-toastify';
+import { useEffect } from 'react';
 
 const CardsContainer = styled.div`
   justify-content: center;
@@ -94,6 +95,16 @@ const Activities = () => {
   const activitiesStatus = useSelector(selectAllActivitiesStatus);
 
   let navigate = useNavigate();
+
+  useEffect(() => {
+    //const fetchData = async () => {
+    if (activitiesStatus === EStateGeneric.IDLE) {
+      dispatch(fetchAllActivities())
+    }
+      
+    //}
+    //fetchData()
+  }, [dispatch, activitiesStatus])
 
   return (  
     <>
