@@ -105,7 +105,7 @@ const Activities = () => {
     //}
     //fetchData()
   }, [dispatch, activitiesStatus])
-
+console.log(activitiesStatus)
   return (  
     <>
       <style>
