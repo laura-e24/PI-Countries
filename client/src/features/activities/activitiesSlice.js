@@ -107,6 +107,7 @@ const activitiesSlice = createSlice({
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(fetchAllActivities.fulfilled, (state, action) => {
+      console.log(action.payload)
       state.activities = action.payload.activities;
       state.allActivitiesStatus = EStateGeneric.SUCCEEDED;
     })
