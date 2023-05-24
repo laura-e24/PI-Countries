@@ -107,7 +107,6 @@ const activitiesSlice = createSlice({
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(fetchAllActivities.fulfilled, (state, action) => {
-      console.log(action.payload)
       state.activities = action.payload.activities;
       state.allActivitiesStatus = EStateGeneric.SUCCEEDED;
     })
@@ -146,11 +145,13 @@ const activitiesSlice = createSlice({
 
     builder.addCase(createActivity.pending, (state, action) => {
       state.oneActivityStatus = EStateGeneric.PENDING;
+      state.allActivitiesStatus = EStateGeneric.PENDING;
       toast("Cargando, por favor espere...", { type: "info" })
     })
 
     builder.addCase(createActivity.rejected, (state, action) => {
       state.oneActivityStatus = EStateGeneric.FAILED;
+      state.allActivitiesStatus = EStateGeneric.SUCCEEDED;
       toast(action.payload?.message, { type: "error" })
     })
 
