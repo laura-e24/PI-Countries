@@ -182,7 +182,7 @@ const ActivityForm = ({ type = "create" }) => {
         }
       `}
     </style>
-    {activityStatus === EStateGeneric.SUCCEEDED ? (
+    {type === "create" || activityStatus === EStateGeneric.SUCCEEDED ? (
       <Form onSubmit={handleSubmit}>
         <div style={{ paddingRight: 20}}>
           <CustomInput 
