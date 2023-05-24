@@ -62,12 +62,10 @@ const ActivityForm = ({ type = "create" }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      await dispatch(fetchOneActivity(activityId))
-      if (countriesStatus === EStateGeneric.IDLE) {
-        await dispatch(fetchAllCountries())
-      }
+      if (type === "edit") await dispatch(fetchOneActivity(activityId))
+      if (countriesStatus === EStateGeneric.IDLE) await dispatch(fetchAllCountries())
     }
-    if (activityStatus === EStateGeneric.IDLE || activity.id !== activityId)
+    if (type === "create" || activityStatus === EStateGeneric.IDLE || activity.id !== activityId)
       fetchData();
   }, []);
 
