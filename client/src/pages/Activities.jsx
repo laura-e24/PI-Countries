@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import NoResults from '../components/NoResults';
 import Layout from '../layouts/Layout';
 import FAIcon from '../components/FAIcon';
-import { deleteActivity, disableActivity, fetchAllActivities, restoreActivity, selectAllActivities, selectAllActivitiesStatus } from '../features/activities/activitiesSlice';
+import { deleteActivity, disableActivity, fetchAllActivities, restoreActivity, selectAllActivities, selectAllActivitiesStatus, selectOneActivityStatus } from '../features/activities/activitiesSlice';
 import { EStateGeneric } from '../redux/types';
 import ActivitiesSkeleton from '../components/ActivitiesSkeleton';
 import { ToastContainer } from 'react-toastify';
@@ -93,19 +93,19 @@ const Activities = () => {
   const dispatch  = useDispatch();
   const activities = useSelector(selectAllActivities);
   const activitiesStatus = useSelector(selectAllActivitiesStatus);
+  const activityStatus = useSelector(selectOneActivityStatus);
 
   let navigate = useNavigate();
 
   useEffect(() => {
-    //const fetchData = async () => {
-    if (activitiesStatus === EStateGeneric.IDLE) {
-      dispatch(fetchAllActivities())
-    }
+    const fetchData = async () => {
+      await dispatch(fetchAllActivities())
+    
       
-    //}
-    //fetchData()
-  }, [dispatch, activitiesStatus])
-console.log(activitiesStatus)
+    }
+    if (activitiesStatus === EStateGeneric.IDLE) fetchData()
+  }, [activitiesStatus, activityStatus, dispatch])
+
   return (  
     <>
       <style>

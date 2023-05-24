@@ -7,7 +7,7 @@ import CustomSelect from "./CustomSelect";
 import { ButtonComponent } from '../components/GenericButton';
 import { useParams } from "react-router-dom";
 import * as _ from "lodash";
-import { cleanUpState, createActivity, fetchOneActivity, selectOneActivity, selectOneActivityStatus, updateActivity } from "../features/activities/activitiesSlice";
+import { cleanUpState, createActivity, fetchAllActivities, fetchOneActivity, selectAllActivities, selectAllActivitiesStatus, selectOneActivity, selectOneActivityStatus, updateActivity } from "../features/activities/activitiesSlice";
 import { fetchAllCountries, selectAllCountries, selectAllCountriesStatus } from "../features/countries/countriesSlice";
 import { EStateGeneric } from "../redux/types";
 import ActivitySkeleton from "./ActivitySkeleton";
@@ -58,12 +58,15 @@ const ActivityForm = ({ type = "create" }) => {
   const countries = useSelector(selectAllCountries);
   const countriesStatus = useSelector(selectAllCountriesStatus);
   const activity = useSelector(selectOneActivity);
+  const activities = useSelector(selectAllActivities);
   const activityStatus = useSelector(selectOneActivityStatus);
+  const activitiesStatus = useSelector(selectAllActivitiesStatus);
 
   useEffect(() => {
     const fetchData = async () => {
       if (type === "edit") await dispatch(fetchOneActivity(activityId))
       if (countriesStatus === EStateGeneric.IDLE) await dispatch(fetchAllCountries())
+      await dispatch(fetchAllActivities())
     }
     if (type === "create" || activityStatus === EStateGeneric.IDLE || activity.id !== activityId)
       fetchData();
@@ -151,13 +154,12 @@ const ActivityForm = ({ type = "create" }) => {
 
     const activity = {
       ...values,
-      id: activityId,
       name: capitalize(values.name.toLocaleLowerCase())
     }
 
     type === "create" 
     ? await  dispatch(createActivity(activity)) 
-    : await  dispatch(updateActivity(activity))
+    : await  dispatch(updateActivity({...activity, id: activityId}))
   }
 
   const removeCountryOption = id => {

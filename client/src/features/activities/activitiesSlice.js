@@ -145,13 +145,11 @@ const activitiesSlice = createSlice({
 
     builder.addCase(createActivity.pending, (state, action) => {
       state.oneActivityStatus = EStateGeneric.PENDING;
-      state.allActivitiesStatus = EStateGeneric.PENDING;
       toast("Cargando, por favor espere...", { type: "info" })
     })
 
     builder.addCase(createActivity.rejected, (state, action) => {
       state.oneActivityStatus = EStateGeneric.FAILED;
-      state.allActivitiesStatus = EStateGeneric.SUCCEEDED;
       toast(action.payload?.message, { type: "error" })
     })
 

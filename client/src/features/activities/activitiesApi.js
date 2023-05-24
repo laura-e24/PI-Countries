@@ -1,10 +1,10 @@
 import axios from "axios";
 
-export const getAllActivities = () => axios(`/activities`)
+export const getAllActivities = async () => await axios(`/activities`)
 
 export const getOneActivity = (activityId) => axios(`/activities/${activityId}`);
 
-export const createOneActivity = (activity) => axios.post(`/activities/`, activity);
+export const createOneActivity = async (activity) => await axios.post(`/activities/`, activity);
 
 export const deleteOneActivity = (activityId) => axios.delete(`/activities/${activityId}?force=true`);
 
