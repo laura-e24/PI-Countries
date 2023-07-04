@@ -60,9 +60,12 @@ El boilerplate cuenta con dos carpetas: `api` y `client`. En estas carpetas esta
 En `api` crear un archivo llamado: `.env` que tenga la siguiente forma:
 
 ```env
-DB_USER=usuariodepostgres
-DB_PASSWORD=passwordDePostgres
-DB_HOST=localhost
+DB_USER=usuario
+DB_PASSWORD=password
+DB_HOST=host
+DB_PORT=port
+DB_NAME=name
+SERVER_PORT=port
 ```
 
 Reemplazar `usuariodepostgres` y `passwordDePostgres` con tus propias credenciales para conectarte a postgres. Este archivo va ser ignorado en la subida a github, ya que contiene información sensible (las credenciales).
