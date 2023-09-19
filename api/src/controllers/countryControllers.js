@@ -4,12 +4,13 @@ const { Op } = require("sequelize");
 
 const fetchCountries = async () => {
   try {
-    const response = await axios('https://restcountries.com/v3/all')
+    const response = await axios('https://restcountries.com/v3.1/all?fields=cca3,name,flags,continents,capital,population,area,subregion')
+    console.log(response.data[1])
     const countries = response.data.map(c => {
       return {
         id: c.cca3,
         name: c.name.common,
-        imgFlag: c.flags[1],
+        imgFlag: c.flags.svg,
         continent: c.continents[0],
         capital: c.capital ? c.capital[0] : c.capital,
         population: c.population,

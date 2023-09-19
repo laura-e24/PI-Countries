@@ -56,12 +56,13 @@ const Country = () => {
   
   useEffect(() => {
     const fetchData = async () => {
+      console.log(countryStatus)
       if (countryStatus === EStateGeneric.IDLE) {
         await dispatch(fetchOneCountry(countryId.toString()));
       }
     }
     fetchData()
-  }, [countryId])
+  }, [countryId, countryStatus, dispatch])
 
   return (  
     <>
