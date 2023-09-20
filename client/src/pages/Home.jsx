@@ -25,6 +25,8 @@ const Home = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log('countriesStatus: ', countriesStatus)
+      console.log('activitiesStatus: ', activitiesStatus)
       if (countriesStatus === EStateGeneric.IDLE) {
         await dispatch(fetchAllCountries(name))
       }
