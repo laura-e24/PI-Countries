@@ -58,7 +58,7 @@ const Country = () => {
     const fetchData = async () => {
       console.log(countryStatus)
       if (countryStatus === EStateGeneric.IDLE) {
-        await dispatch(fetchOneCountry(countryId.toString()));
+        dispatch(fetchOneCountry(countryId.toString()));
       }
     }
     fetchData()

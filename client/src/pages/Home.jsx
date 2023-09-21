@@ -28,10 +28,10 @@ const Home = () => {
       console.log('countriesStatus: ', countriesStatus)
       console.log('activitiesStatus: ', activitiesStatus)
       if (countriesStatus === EStateGeneric.IDLE) {
-        await dispatch(fetchAllCountries(name))
+        dispatch(fetchAllCountries(name))
       }
       if (activitiesStatus === EStateGeneric.IDLE) {
-        await dispatch(fetchAllActivities())
+        dispatch(fetchAllActivities())
       }
     }
     fetchData()

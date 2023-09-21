@@ -1,8 +1,8 @@
 import axios from "axios";
 
-export const getAllCountries = (name = undefined) => axios(name
+export const getAllCountries = async (name = undefined) => await axios(name
   ? `/countries?name=${name}`
   : `/countries`
 );
 
-export const getOneCountry = (countryId) => axios(`/countries/${countryId}`);
+export const getOneCountry = async (countryId) => await axios(`/countries/${countryId}`);
