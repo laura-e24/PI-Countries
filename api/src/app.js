@@ -24,7 +24,7 @@ server.use(bodyParser.json({ limit: '50mb' }));
 server.use(cookieParser());
 server.use(morgan('dev'));
 server.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*'); // update to match the domain you will make the request from
+  res.header('Access-Control-Allow-Origin', ['https://henrycountries.vercel.app', 'http://localhost:5173', 'http://127.0.0.1:5173']); // update to match the domain you will make the request from
   // res.header('Access-Control-Allow-Origin', 'https://henrycountries.vercel.app'); // update to match the domain you will make the request from
   // res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5173'); // update to match the domain you will make the request from
   res.header('Access-Control-Allow-Credentials', 'true');
