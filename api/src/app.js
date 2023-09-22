@@ -12,7 +12,7 @@ const server = express();
 
 server.name = 'API';
 const corsConfig = {
-  origin: ['https://henrycountries.vercel.app/', 'http://localhost:5173', 'http://127.0.0.1:5173'],
+  origin: ['https://henrycountries.vercel.app', 'http://localhost:5173', 'http://127.0.0.1:5173'],
   credentials: true,
   methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
   allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept']
